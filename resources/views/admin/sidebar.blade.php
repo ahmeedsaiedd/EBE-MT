@@ -80,7 +80,9 @@
          
         <div id="create-project-modal" class="modal">
           <div class="modal-content">
+            <a href="">
             <h2 class="text-lg font-semibold mb-4">Create Project</h2>
+          </a>
             <form id="create-project-form">
               <div class="mb-4">
                 <label for="project-name" class="block text-sm font-medium text-gray-700">Project Name</label>

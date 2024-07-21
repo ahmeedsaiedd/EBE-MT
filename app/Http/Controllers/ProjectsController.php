@@ -15,6 +15,7 @@ class ProjectsController extends Controller
     {
         return Project::get();
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -34,10 +35,8 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
-        Project::create([
-
-        ]);
-    }
+        Project::create($request->all());
+}
 
     /**
      * Display the specified resource.
