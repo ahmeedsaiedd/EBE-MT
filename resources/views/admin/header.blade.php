@@ -53,36 +53,7 @@
             <div
               class="container flex items-center justify-between h-full px-6 mx-auto text-purple-600 dark:text-purple-300"
             >
-            
-
-            <!-- <div class="text-sm font-medium text-center text-gray-500  border-gray-200 dark:text-gray-400 ">
-      <ul class="flex w-full">
-      <li class="flex-none w-1/4">
-      <a href="#" class="block p-4 border-b-2 border-transparent rounded-t-lg text-center hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300 whitespace-nowrap">
-          Your Work
-      </a>
-  </li>
-
-          <li class="flex-none w-1/4">
-              <a href="#" class="block p-4 border-b-2 border-transparent rounded-t-lg text-center hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
-                  Projects
-              </a>
-          </li>
-          <li class="flex-none w-1/4">
-              <a href="#" class="block p-4 border-b-2 border-transparent rounded-t-lg text-center hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
-                  Filters
-              </a>
-          </li>
-          <li class="flex-none w-1/4">
-              <a href="#" class="block p-4 border-b-2 border-transparent rounded-t-lg text-center hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
-                  Create
-              </a>
-          </li>
-      </ul>
-  </div> -->
-
-
-            
+                   
               <!-- Search input -->
               <div class="flex justify-center flex-1 lg:mr-32">
                 <div
@@ -116,8 +87,20 @@
       <!-- Modal -->
       <div id="checkbox-form-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" role="dialog" aria-labelledby="checkbox-form-title">
     <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full">
-        <h2 id="checkbox-form-title" class="text-lg font-semibold mb-4">Creation</h2>
+        <h2 id="checkbox-form-title" class="text-lg font-semibold mb-4">Create Issue</h2>
         <form id="checkbox-form">
+            <!-- Dropdown for Projects -->
+            <div class="mb-4">
+                <label for="project-select" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Select Project</label>
+                <select id="project-select" name="project_id" class="mt-1 block w-full border-gray-300 dark:border-gray-600 dark:bg-gray-700 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                    <option value="" disabled selected>Select a project</option>
+                    @foreach($projects as $project)
+                        <option value="{{ $project->id }}">{{ $project->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Checkboxes -->
             <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     <input type="checkbox" name="epic" class="mr-2 checkbox-option" data-target="epic-form">
@@ -154,18 +137,18 @@
                     Bug
                 </label>
             </div>
-            <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                    <input type="checkbox" name="additional-functionality" class="mr-2 checkbox-option" data-target="additional-functionality-form">
-                    Additional functionality
-                </label>
-            </div>
+
             <div class="flex justify-end">
-                <button type="button" id="close-modal" class="ml-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-sm hover:bg-gray-300">Close</button>
+                <!-- Close button -->
+                <button type="button" id="close-modal-button" class="ml-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-sm hover:bg-gray-300">Close</button>
+
+                <!-- Submit button -->
+                <button type="button" id="submit-modal-button" class="ml-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-sm hover:bg-gray-300">Submit</button>
             </div>
         </form>
     </div>
 </div>
+
 
       <!-- Dynamic Forms -->
       <div id="dynamic-form-container" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50" style="display: none;">
@@ -175,10 +158,10 @@
                   <!-- Form content will be injected here -->
                   <div id="form-content"></div>
                   <div class="flex justify-end mt-4">
-                  <button onclick="showToast('This is a toast notification!')">Show Toast</button>
-                      <button type="button"  id="close-dynamic-form" class="ml-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-sm hover:bg-gray-300">Cancel</button>
+                    <button type="button"  id="close-dynamic-form" class="ml-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-sm hover:bg-gray-300">Cancel</button>
+                    <button class="class=ml-4 px-4 py-2 bg-gray-200 text-gray-800 rounded-md shadow-sm hover:bg-gray-300" input type="submit" value="submit">Submit</button>
                   </div>
-                  <div id="message" class="message">View Issue</div>
+                 
               </form>
           </div>
       </div>
@@ -387,18 +370,17 @@
             </div>
           </header>
           <script>
-           function showMessage() {
-    document.getElementById('message').style.display = 'block';
-}
-
+           // Open the modal when the "open-form-button" is clicked
 document.getElementById('open-form-button').addEventListener('click', function() {
     document.getElementById('checkbox-form-modal').style.display = 'flex';
 });
 
-document.getElementById('close-modal').addEventListener('click', function() {
+// Close the modal when the "close-modal-button" button is clicked
+document.getElementById('close-modal-button').addEventListener('click', function() {
     document.getElementById('checkbox-form-modal').style.display = 'none';
 });
 
+// Handle changes to checkboxes and display the corresponding form
 document.querySelectorAll('.checkbox-option').forEach(checkbox => {
     checkbox.addEventListener('change', function(event) {
         if (event.target.checked) {
@@ -407,6 +389,7 @@ document.querySelectorAll('.checkbox-option').forEach(checkbox => {
     });
 });
 
+// Close the dynamic form container and reset checkboxes
 document.getElementById('close-dynamic-form').addEventListener('click', function() {
     document.getElementById('dynamic-form-container').style.display = 'none';
     document.querySelectorAll('.checkbox-option').forEach(checkbox => {
@@ -414,134 +397,108 @@ document.getElementById('close-dynamic-form').addEventListener('click', function
     });
 });
 
-          function showDynamicForm(formType) {
-              const formContent = document.getElementById('form-content');
-              formContent.innerHTML = '';
+// Function to dynamically show forms based on the type selected
+function showDynamicForm(formType) {
+    const formContent = document.getElementById('form-content');
+    formContent.innerHTML = '';
 
-              let formTitle = '';
-              let formHTML = '';  
+    let formTitle = '';
+    let formHTML = '';  
 
-              switch(formType) {
-                  case 'epic-form':
-                      formTitle = 'Epic Form';
-                      formHTML = `
-                          <div class="mb-4">
-                              <label for="epic-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
-                              <input type="text" id="epic-title" name="epic-title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                          </div>
-                          <div class="mb-4">
-                              <label for="epic-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                              <textarea id="epic-description" name="epic-description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required></textarea>
-                          </div>
-                      `;
-                      break;
-                  case 'user-story-form':
-                      formTitle = 'User Story Form';
-                      formHTML = `
-                          <div class="mb-4">
-                              <label for="user-story-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                              <textarea id="user-story-description" name="user-story-description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required></textarea>
-                          </div>
-                      `;
-                      break;
-                      case 'test-cases-form':
-                      formTitle = 'Test Cases Form';
-                      formHTML = `
-                          <div class="mb-4">
-                              <label for="test-cases-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
-                              <input type="text" id="test-cases-title" name="test-cases-title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                          </div>
-                          <div class="mb-4">
-                              <label for="test-cases-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                              <textarea id="test-cases-description" name="test-cases-description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required></textarea>
-                          </div>
-                          
-                      `;
-                      break;
-                  
-                      case 'test-set-form':
-                      formTitle = 'Test Set Form';
-                      formHTML = `
-                          <div class="mb-4">
-                              <label for="test-cases-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
-                              <input type="text" id="test-cases-title" name="test-cases-title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                          </div>
-                          <div class="mb-4">
-                              <label for="test-cases-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                              <textarea id="test-cases-description" name="test-cases-description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required></textarea>
-                          </div>
-                          
-                      `;
-                      break;
-
-                  case 'test-execution-form':
-                      formTitle = 'Test execution Form';
-                      formHTML = `
-                          <div class="mb-4">
-                              <label for="test-cases-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
-                              <input type="text" id="test-cases-title" name="test-cases-title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                          </div>
-                          <div class="mb-4">
-                              <label for="test-cases-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                              <textarea id="test-cases-description" name="test-cases-description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required></textarea>
-                          </div>
-                          
-                      `;
-                      break;
-                      case 'bug-form':
-                      formTitle = 'bug Form';
-                      formHTML = `
-                          <div class="mb-4">
-                              <label for="test-cases-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
-                              <input type="text" id="test-cases-title" name="test-cases-title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
-                          </div>
-                          <div class="mb-4">
-                              <label for="test-cases-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
-                              <textarea id="test-cases-description" name="test-cases-description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required></textarea>
-                          </div>
-                          
-                      `;
-                      break;
-                  // Add respective HTML structure for each form
-                  default:
-                      formTitle = 'Unknown Form';
-                      formHTML = '<p>Form type not recognized.</p>';
-              }
-
-              document.getElementById('dynamic-form-title').textContent = formTitle;
-              formContent.innerHTML = formHTML;
-              document.getElementById('dynamic-form-container').style.display = 'flex';
-          }
-          document.addEventListener('DOMContentLoaded', () => {
-    // Function to show the message
-    function showMessage() {
-        document.getElementById('message').style.display = 'block';
+    switch(formType) {
+        case 'epic-form':
+            formTitle = 'Epic Form';
+            formHTML = `
+                <div class="mb-4">
+                    <label for="epic-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+                    <input type="text" id="epic-title" name="epic-title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label for="epic-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                    <textarea id="epic-description" name="epic-description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required></textarea>
+                </div>
+            `;
+            break;
+        case 'user-story-form':
+            formTitle = 'User Story Form';
+            formHTML = `
+                <div class="mb-4">
+                    <label for="user-story-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                    <textarea id="user-story-description" name="user-story-description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required></textarea>
+                </div>
+            `;
+            break;
+        case 'test-cases-form':
+            formTitle = 'Test Cases Form';
+            formHTML = `
+                <div class="mb-4">
+                    <label for="test-cases-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+                    <input type="text" id="test-cases-title" name="test-cases-title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label for="test-cases-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                    <textarea id="test-cases-description" name="test-cases-description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required></textarea>
+                </div>
+            `;
+            break;
+        case 'test-set-form':
+            formTitle = 'Test Set Form';
+            formHTML = `
+                <div class="mb-4">
+                    <label for="test-set-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+                    <input type="text" id="test-set-title" name="test-set-title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label for="test-set-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                    <textarea id="test-set-description" name="test-set-description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required></textarea>
+                </div>
+            `;
+            break;
+        case 'test-execution-form':
+            formTitle = 'Test Execution Form';
+            formHTML = `
+                <div class="mb-4">
+                    <label for="test-execution-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+                    <input type="text" id="test-execution-title" name="test-execution-title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label for="test-execution-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                    <textarea id="test-execution-description" name="test-execution-description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required></textarea>
+                </div>
+            `;
+            break;
+        case 'bug-form':
+            formTitle = 'Bug Form';
+            formHTML = `
+                <div class="mb-4">
+                    <label for="bug-title" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Title</label>
+                    <input type="text" id="bug-title" name="bug-title" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required>
+                </div>
+                <div class="mb-4">
+                    <label for="bug-description" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Description</label>
+                    <textarea id="bug-description" name="bug-description" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm" required></textarea>
+                </div>
+            `;
+            break;
+        default:
+            formTitle = 'Unknown Form';
+            formHTML = '<p>Form type not recognized.</p>';
     }
-    document.getElementById('dynamic-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    showMessage();
-    alert('Form submitted successfully!');
-  });
-  });
-  function showToast(message) {
-  const toastContainer = document.getElementById('toast-container');
-  const toast = document.createElement('div');
-  toast.className = 'toast';
-  toast.innerText = message;
-  
-  toastContainer.appendChild(toast);
 
-  // Show the toast
-  setTimeout(() => {
-    toast.classList.add('show');
-  }, 100);
-
-  // Hide and remove the toast after 3 seconds
-  setTimeout(() => {
-    toast.classList.remove('show');
-    setTimeout(() => {
-      toastContainer.removeChild(toast);
-    }, 500); // Matches the CSS transition duration
-  }, 3000);
+    document.getElementById('dynamic-form-title').textContent = formTitle;
+    formContent.innerHTML = formHTML;
+    document.getElementById('dynamic-form-container').style.display = 'flex';
 }
-          </script>
+
+// Handle form submission and show a message
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('dynamic-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        showMessage();
+        alert('Form submitted successfully!');
+    });
+});
+</script>
+
+        </script>
+        

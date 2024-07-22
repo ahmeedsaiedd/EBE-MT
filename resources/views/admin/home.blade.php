@@ -7,6 +7,8 @@
       :class="{ 'overflow-hidden': isSideMenuOpen }"
     >
       @include('admin.sidebar')
+
+      
       </aside>
       <!-- Mobile sidebar -->
      @include('admin.header')

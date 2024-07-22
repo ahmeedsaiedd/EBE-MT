@@ -11,14 +11,10 @@ return new class extends Migration
      *
      * @return void
      */
-   
     public function up()
     {
-        Schema::create('projects', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('type'); // Change from integer to string
-            $table->timestamps();
+        Schema::table('projects', function (Blueprint $table) {
+            $table->string('type')->change(); // Change column type to string
         });
     }
 
@@ -29,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('projects');
+        Schema::table('projects', function (Blueprint $table) {
+            $table->integer('type')->unsigned()->change(); // Revert back to integer if needed
+        });
     }
 };

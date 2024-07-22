@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project;
+
 class ProjectsController extends Controller
 {
     /**
@@ -11,11 +11,21 @@ class ProjectsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return Project::get();
-    }
+    // app/Http/Controllers/ProjectsController.php
+
+// app/Http/Controllers/ProjectsController.php
+
+// app/Http/Controllers/ProjectsController.php
+
+public function index()
+{
+    $projects = Project::all(); // Fetch all projects
+    return view('admin.home', ['projects' => $projects]); // Pass 'projects' to the view
     
+}
+
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -34,9 +44,31 @@ class ProjectsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-        Project::create($request->all());
+{
+    // Validate the request data
+    $request->validate([
+        'project_name' => 'required|string|max:255',
+        'project_type' => [
+            'required',
+            'string',
+            'in:Scrum,Kanban',
+        ],
+        // Add validation rules for other fields if needed
+    ]);
+
+    // Create a new project in the database
+    $project = new Project();
+    $project->name = $request->input('project_name');
+    $project->type = $request->input('project_type');
+    // Assign other fields
+    $project->save();
+
+    // Return a response (e.g., redirect or JSON response)
+    return redirect()->back();
 }
+
+
+
 
     /**
      * Display the specified resource.
