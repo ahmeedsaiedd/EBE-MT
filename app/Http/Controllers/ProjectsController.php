@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\User;
 
 class ProjectsController extends Controller
 {
@@ -19,10 +20,13 @@ class ProjectsController extends Controller
 
 public function index()
 {
-    $projects = Project::all(); // Fetch all projects
-    return view('admin.home', ['projects' => $projects]); // Pass 'projects' to the view
+   
+    $projects = Project::all();
+    $users = User::where('usertype', '!=', 1)->get();
+    return view('admin.home', compact('projects', 'users'));
     
 }
+
 
 
 
@@ -33,9 +37,9 @@ public function index()
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
-        //
-    }
+{
+   
+}
 
     /**
      * Store a newly created resource in storage.

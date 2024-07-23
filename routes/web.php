@@ -45,6 +45,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
 
 
+
     Route::post('project', [ProjectsController::class, 'store'])->name('project.store');
 
     Route::get('issues', [IssueController::class, 'index']);

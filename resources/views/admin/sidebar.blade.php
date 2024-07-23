@@ -78,6 +78,18 @@
 
             <ul class="mt-6">
                 <li class="relative px-6 py-3">
+                    <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                        href="cards.html">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
+                            stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                            </path>
+                        </svg>
+                        <span class="ml-4">Dashboard</span>
+                    </a>
+                </li>
+                <li class="relative px-6 py-3">
                     <button id="create-project-btn"
                         class="btn-toggle inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none">
                         <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
@@ -119,7 +131,7 @@
               
 
                 <!-- Other list items... -->
-                <li class="relative px-6 py-3">
+                {{-- <li class="relative px-6 py-3">
                     <button id="dropdown-btn"
                         class="btn-toggle inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none">
                         <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
@@ -130,34 +142,35 @@
                         </svg>
                         <span class="ml-4">My Project</span>
                     </button>
-                    <div id="dropdown-menu" class="dropdown-menu absolute mt-2 bg-white shadow-lg rounded-md w-48 max-h-60 overflow-y-auto hidden">
-                      <ul>
-                          @forelse($projects->take(5) as $project)
-                              <li>
-                                  <a href="#"
-                                     class="project-option block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                     data-project="{{ $project->id }}">
-                                     {{ $project->name }}
-                                  </a>
-                              </li>
-                          @empty
-                              <li>
-                                  <span class="block px-4 py-2 text-sm text-gray-700">
-                                      No projects available
-                                  </span>
-                              </li>
-                          @endforelse
-                      </ul>
-                      
-                      @if($projects->count() > 5)
-                          <div class="px-4 py-2">
-                              <a href="{{ route('admin.projects') }}"
-                                 class="text-blue-500 hover:underline text-sm">
-                                 See More
-                              </a>
-                          </div>
-                      @endif
-                  </div>
+                    <div id="dropdownMenu"
+                    class="absolute mt-2 bg-white shadow-lg rounded-md w-48 max-h-60 overflow-y-auto z-10 hidden">
+                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
+                        @forelse($projects->take(5) as $project)
+                            <li>
+                                <a href="#"
+                                    class="project-option block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                    data-project="{{ $project->id }}">
+                                    {{ $project->name }}
+                                </a>
+                            </li>
+                        @empty
+                            <li>
+                                <span class="block px-4 py-2 text-sm text-gray-700">
+                                    No projects available
+                                </span>
+                            </li>
+                        @endforelse
+                    </ul>
+                    
+                    @if($projects->count() > 5)
+                        <div class="px-4 py-2">
+                            <a href="{{ route('admin.projects') }}"
+                               class="text-blue-500 hover:underline text-sm">
+                               See More
+                            </a>
+                        </div>
+                    @endif
+                </div> --}}
                   
                   
                 </li>
@@ -166,6 +179,7 @@
                 <!-- Modal -->
                 <div id="create-project-modal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50 hidden">
                   <div class="bg-white rounded-lg shadow-lg w-11/12 md:w-1/2 lg:w-1/3 p-6">
+                    <li></li>
                       <h2 class="text-2xl font-bold mb-6 text-center">Create Project</h2>
                       <form id="checkbox-form" action="{{ route('project.store') }}" method="POST" class="space-y-4">
                           @csrf
@@ -306,18 +320,7 @@
 
 
 
-                <li class="relative px-6 py-3">
-                    <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                        href="cards.html">
-                        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
-                            stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                            <path
-                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
-                            </path>
-                        </svg>
-                        <span class="ml-4">Components</span>
-                    </a>
-                </li>
+               
             </ul>
         </div>
     </aside>
