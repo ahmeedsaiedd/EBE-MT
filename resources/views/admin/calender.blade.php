@@ -14,7 +14,7 @@
             padding: 10px;
         }
     </style>
-    @include('admin.css-script')
+    @include('admin.css')
 </head>
 <body :class="{ 'overflow-hidden': isSideMenuOpen }" class="bg-gray-50 dark:bg-gray-900">
     <div class="flex h-screen">
@@ -183,6 +183,29 @@
             // Build breadcrumbs on page load
             buildBreadcrumbs();
         });
+        document.getElementById('dropdownButton').addEventListener('click', function () {
+            const menu = document.getElementById('dropdownMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            const button = document.getElementById('dropdownButton');
+            const menu = document.getElementById('dropdownMenu');
+            if (!button.contains(event.target) && !menu.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+        
+        document.getElementById('openModalButton').addEventListener('click', function() {
+        document.getElementById('modal').classList.remove('hidden');
+    });
+
+    document.querySelectorAll('#closeModalButton').forEach(button => {
+        button.addEventListener('click', function() {
+            document.getElementById('modal').classList.add('hidden');
+        });
+    });
     </script>
 </body>
 </html>

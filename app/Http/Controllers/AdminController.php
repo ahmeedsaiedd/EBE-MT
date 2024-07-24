@@ -2,54 +2,56 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\ProjectService;
+use App\Services\UsersService;
 use Illuminate\Http\Request;
-use App\Models\UserStory;
+
 
 class AdminController extends Controller
 {
+    public function __construct(
+        private ProjectService $projectSerivce,
+        private UsersService $usersService
+        )
+        {
+        }
     public function view_userstory()
     {
-        return view('admin.userstory');
+        $projects = $this->projectSerivce->getAllProjetcs();
+        $users = $this->usersService->getAllUsers();
+        return view('admin.userstory', compact('projects','users'));
+    }
+    public function View()
+    {
+        $projects = $this->projectSerivce->getAllProjetcs();
+        $users = $this->usersService->getAllUsers();
+        return view('admin.userstory', compact('projects','users'));
     }
 
     public function view_board()
     {
-        return view('admin.board');
+        $users = $this->usersService->getAllUsers();
+        $projects = $this->projectSerivce->getAllProjetcs();
+
+        return view('admin.board', compact('projects','users'));
+
     }
 
     public function view_calender()
     {
-        return view('admin.calender');
-    }
+$users = $this->usersService->getAllUsers();
+        $projects = $this->projectSerivce->getAllProjetcs();
+
+        return view('admin.calender', compact('projects','users'));    }
 
     public function view_createproject()
     {
-        return view('admin.createproject');
+        $projects = $this->projectSerivce->getAllProjetcs();
+        return view('admin.createproject', compact('projects'));
     }
 
-    public function UserStory(Request $request)
-    {
-        $request->validate([
-            'userStoryName' => 'required|array',
-            'asField' => 'required|array',
-            'iWantField' => 'required|array',
-            'soThatField' => 'required|array',
-        ]);
-
-        $userStoryNames = $request->input('userStoryName');
-        $asFields = $request->input('asField');
-        $iWantFields = $request->input('iWantField');
-        $soThatFields = $request->input('soThatField');
-
-        foreach ($userStoryNames as $index => $userStoryName) {
-            UserStory::create([
-                'user_story_name' => $userStoryName,
-                'as_field' => $asFields[$index],
-                'i_want_field' => $iWantFields[$index],
-                'so_that_field	' => $soThatFields[$index],
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'User stories added successfully!');
-    }
+   public function userstory(Request $request)
+{
+    dd("sdfsdfsd");
+}
 }

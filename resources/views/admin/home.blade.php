@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
-@include('admin.css-script')
+@include('admin.css')
 
 <body>
     <div class="flex h-screen bg-gray-50 dark:bg-gray-900" :class="{ 'overflow-hidden': isSideMenuOpen }">
@@ -14,6 +14,9 @@
         @include('admin.body')
     </div>
     </div>
+    <script>
+        @include('admin.script')
+    </script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
 
     <script>

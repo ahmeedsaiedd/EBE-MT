@@ -19,19 +19,15 @@
               display: none;
           }
 
-          .message {
-              display: none;
-              margin-top: 10px;
-              color: green;
-          }
+          
       </style>
 
   </head>
-  <div x-show="isSideMenuOpen" x-transition:enter="transition ease-in-out duration-150"
+  {{-- <div x-show="isSideMenuOpen" x-transition:enter="transition ease-in-out duration-150"
       x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
       x-transition:leave="transition ease-in-out duration-150" x-transition:leave-start="opacity-100"
       x-transition:leave-end="opacity-0"
-      class="fixed inset-0 z-10 flex items-end bg-black bg-opacity-50 sm:items-center sm:justify-center"></div>
+      class="fixed inset-0 z-0 flex items-end bg-black bg-opacity-0 sm:items- sm:justify-center"></div> --}}
   <aside class="fixed inset-y-0 z-20 flex-shrink-0 w-64 mt-16 overflow-y-auto bg-white dark:bg-gray-800 md:hidden"
       x-show="isSideMenuOpen" x-transition:enter="transition ease-in-out duration-150"
       x-transition:enter-start="opacity-0 transform -translate-x-20" x-transition:enter-end="opacity-100"
@@ -183,84 +179,96 @@
 
                   </div>
               </div>
-              <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-                <div class="relative top-20 mx-auto p-6 w-full max-w-lg">
-                    <div class="bg-white shadow-lg rounded-md p-6">
-                        <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-gray-900">Create Issue</h3>
-                            <button id="closeModalButton" class="text-gray-600 hover:text-gray-900">
-                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                                </svg>
-                            </button>
+            <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
+  <div class="relative top-20 mx-auto p-6 w-full max-w-lg">
+      <div class="bg-white shadow-lg rounded-md p-6">
+          <div class="flex items-center justify-between">
+              <h3 class="text-xl font-semibold text-gray-900">Create Issue</h3>
+              <button id="closeModalButton" class="text-gray-600 hover:text-gray-900">
+                  <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+              </button>
+          </div>
+
+          <form action="{{ url('view_userstory') }}" method="" enctype="multipart/form-data" class="mt-4">
+              @csrf
+              <!-- Project Dropdown -->
+              <div class="mb-4">
+                  <label for="project" class="block text-sm font-medium text-gray-700">Select Project</label>
+                  <select name="project" id="project" class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                      @foreach($projects as $project)
+                          <option value="{{ $project->id }}">{{ $project->name }}</option>
+                      @endforeach
+                  </select>
+              </div>
+
+              <!-- Status Dropdown -->
+              <div class="mb-4">
+                  <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
+                  <select name="status" id="status" class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                      <option value="To Do" class="text-gray-500">To Do</option>
+                      <option value="In Progress" class="text-blue-500">In Progress</option>
+                      <option value="Done" class="text-green-500">Done</option>
+                  </select>
+              </div>
+
+              <!-- Summary Input -->
+              <div class="mb-4">
+                  <label for="summary" class="block text-sm font-medium text-gray-700">Summary</label>
+                  <input type="text" name="summary" id="summary" class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+              </div>
+
+              <!-- Description Textarea -->
+              <div class="mb-4">
+                  <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                  <textarea name="description" id="description" rows="3" class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"></textarea>
+              </div>
+
+              <!-- Attachment Upload -->
+              <div class="mb-4">
+                  <label for="attachment" class="block text-sm font-medium text-gray-700">Attachment</label>
+                  <input type="file" name="attachment" id="attachment" class="mt-1 block w-full text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+              </div>
+
+              <!-- Assignee Dropdown -->
+              <div class="mb-4">
+                  <label for="assignee" class="block text-sm font-medium text-gray-700">Assignee</label>
+                  <select name="assignee" id="assignee" class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
+                      @foreach($users as $user)
+                          @if($user->user_type != 1)
+                              <option value="{{ $user->id }}">{{ $user->name }}</option>
+                          @endif
+                      @endforeach
+                  </select>
+              </div>
+
+              <!-- Buttons -->
+              <div class="flex justify-end space-x-2">
+                  <button type="button" id="closeModalButton" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
+                      Cancel
+                  </button>
+                  <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                      Create
+                  </button>
+                  <div id="loading" class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50 hidden">
+                    <li class="flex items-center">
+                        <div role="status">
+                            <svg aria-hidden="true" class="w-4 h-4 me-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor"/>
+                                <path d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z" fill="currentFill"/>
+                            </svg>
+                            <span class="sr-only">Loading...</span>
                         </div>
-              
-                        <form action="" method="POST" enctype="multipart/form-data" class="mt-4">
-                            @csrf
-                            <!-- Project Dropdown -->
-                            <div class="mb-4">
-                                <label for="project" class="block text-sm font-medium text-gray-700">Select Project</label>
-                                <select name="project" id="project" class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    @foreach($projects as $project)
-                                        <option value="{{ $project->id }}">{{ $project->name }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-              
-                            <!-- Status Dropdown -->
-                            <div class="mb-4">
-                                <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                                <select name="status" id="status" class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    <option value="To Do" class="text-gray-500">To Do</option>
-                                    <option value="In Progress" class="text-blue-500">In Progress</option>
-                                    <option value="Done" class="text-green-500">Done</option>
-                                </select>
-                            </div>
-              
-                            <!-- Summary Input -->
-                            <div class="mb-4">
-                                <label for="summary" class="block text-sm font-medium text-gray-700">Summary</label>
-                                <input type="text" name="summary" id="summary" class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                            </div>
-              
-                            <!-- Description Textarea -->
-                            <div class="mb-4">
-                                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                                <textarea name="description" id="description" rows="3" class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"></textarea>
-                            </div>
-              
-                            <!-- Attachment Upload -->
-                            <div class="mb-4">
-                                <label for="attachment" class="block text-sm font-medium text-gray-700">Attachment</label>
-                                <input type="file" name="attachment" id="attachment" class="mt-1 block w-full text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                            </div>
-              
-                            <!-- Assignee Dropdown -->
-                            <div class="mb-4">
-                                <label for="assignee" class="block text-sm font-medium text-gray-700">Assignee</label>
-                                <select name="assignee" id="assignee" class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    @foreach($users as $user)
-                                        @if($user->user_type != 1)
-                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                        @endif
-                                    @endforeach
-                                </select>
-                            </div>
-              
-                            <!-- Buttons -->
-                            <div class="flex justify-end space-x-2">
-                                <button type="button" id="closeModalButton" class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
-                                    Cancel
-                                </button>
-                                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                    Create
-                                </button>
-                            </div>
-                        </form>
-                    </div>
+                        Preparing your task
+                    </li>
                 </div>
               </div>
-              
+          </form>
+      </div>
+  </div>
+</div>
+
 
 
 
@@ -332,65 +340,35 @@
                       </template>
                   </li>
                   <!-- Profile menu -->
+                  
                   <li class="relative">
-                      <button class="align-middle rounded-full focus:shadow-outline-purple focus:outline-none"
-                          @click="toggleProfileMenu" @keydown.escape="closeProfileMenu" aria-label="Account"
-                          aria-haspopup="true">
-                          <img class="object-cover w-8 h-8 rounded-full" img src="{{ asset('pp.png') }}"
-                              alt="Logo" class="w-100% h-20">
-                      </button>
+                      {{-- <x-app-layout>
+                      <x-app-layout> --}}
                       <template x-if="isProfileMenuOpen">
-                          <ul x-transition:leave="transition ease-in duration-150"
-                              x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                              @click.away="closeProfileMenu" @keydown.escape="closeProfileMenu"
-                              class="absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark:border-gray-700 dark:text-gray-300 dark:bg-gray-700"
-                              aria-label="submenu">
-                              <li class="flex">
-                                  <a class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                                      href="#">
-                                      <svg class="w-4 h-4 mr-3" aria-hidden="true" fill="none"
-                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          viewBox="0 0 24 24" stroke="currentColor">
-                                          <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
-                                          </path>
-                                      </svg>
-                                      <span>Profile</span>
-                                  </a>
-                              </li>
-                              <li class="flex">
-                                  <a class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                                      href="#">
-                                      <svg class="w-4 h-4 mr-3" aria-hidden="true" fill="none"
-                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          viewBox="0 0 24 24" stroke="currentColor">
-                                          <path
-                                              d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
-                                          </path>
-                                          <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                      </svg>
-                                      <span>Settings</span>
-                                  </a>
-                              </li>
-                              <li class="flex">
-                                  <a class="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
-                                      href="#">
-                                      <svg class="w-4 h-4 mr-3" aria-hidden="true" fill="none"
-                                          stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          viewBox="0 0 24 24" stroke="currentColor">
-                                          <path
-                                              d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1">
-                                          </path>
-                                      </svg>
-                                      <span>Log out</span>
-                                  </a>
-                              </li>
-                          </ul>
-                      </template>
-                  </li>
-              </ul>
+                          
+                    </li>
+                </template>
+                </ul>
           </div>
           <div class="relative inline-block text-left">
 
 
           </div>
       </header>
+
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('createButton').addEventListener('click', function(event) {
+            event.preventDefault(); // Prevent default form submission or link action
+            
+            // Show the loading indicator
+            document.getElementById('loading').classList.remove('hidden');
+
+            // Delay the redirection to allow the loading indicator to be visible
+            setTimeout(function() {
+                window.location.href = "{{ route('admin.userstory') }}";
+            }, 500); // Adjust the delay as needed
+        });
+    });
+        @include('admin.script')
+      </script>

@@ -2,27 +2,21 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Project;
-use App\Models\User;
+use App\Models\{Project,User};
+use App\Services\ProjectService;
 
 class ProjectsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    // app/Http/Controllers/ProjectsController.php
-
-// app/Http/Controllers/ProjectsController.php
-
-// app/Http/Controllers/ProjectsController.php
+    public function __construct(
+        private ProjectService $projectSerivce,
+        )
+        {
+        }
 
 public function index()
 {
    
-    $projects = Project::all();
-    $users = User::where('usertype', '!=', 1)->get();
+    $projects = $this->projectSerivce->getAllProjetcs();
     return view('admin.home', compact('projects', 'users'));
     
 }
