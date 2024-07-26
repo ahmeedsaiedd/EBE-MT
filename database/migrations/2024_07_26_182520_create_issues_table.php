@@ -11,8 +11,8 @@ return new class extends Migration
         Schema::create('issues', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id'); // Assuming you have a foreign key for projects
-            $table->unsignedInteger('status_id'); // Assuming you have a foreign key for projects
-            $table->string('name'); // Add this field if it is required
+            $table->unsignedBigInteger('status_id'); // Assuming you have a foreign key for projects
+            $table->string('name')->nullable(); // Add this field if it is required
             $table->string('summary')->nullable();
             $table->text('description')->nullable();
             $table->string('epic_title')->nullable();

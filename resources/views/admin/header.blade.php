@@ -198,13 +198,14 @@
                             </button>
                         </div>
 
-                        <form action="{{ route('issue.store') }}" method="POST" enctype="multipart/form-data" class="mt-4">
+                        <form action="{{ route('issue.store') }}" method="POST" enctype="multipart/form-data"
+                            class="mt-4">
                             @csrf
                             <!-- Project Dropdown -->
                             <div class="mb-4">
                                 <label for="project" class="block text-sm font-medium text-gray-700">Select
                                     Project</label>
-                                <select name="project" id="project"
+                                <select name="project_id" id="project_id"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                                     @foreach($projects as $project)
                                     <option value="{{ $project->id }}">{{ $project->name }}</option>
@@ -215,7 +216,7 @@
                             <!-- Status Dropdown -->
                             <div class="mb-4">
                                 <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
-                                <select name="status" id="status"
+                                <select name="status_id" id="status_id"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                                     @foreach($statues as $status)
                                     <option value="{{ $status->id }}">{{ $status->name }}</option>
@@ -242,7 +243,7 @@
                             <div class="mb-4">
                                 <label for="attachment"
                                     class="block text-sm font-medium text-gray-700">Attachment</label>
-                                <input type="file" name="attachment" id="attachment"
+                                <input type="file" name="attachments" id="attachments"
                                     class="mt-1 block w-full text-base border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
                             </div>
 

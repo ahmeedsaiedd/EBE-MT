@@ -6,7 +6,6 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\ProjectsController;
-use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,11 +55,10 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('issues', [IssueController::class, 'index']);
     Route::get('issues/create', [IssueController::class, 'create']);
-    Route::post('issues', [IssueController::class, 'store']);
+    Route::post('issues', [IssueController::class, 'store'])->name('issue.store');
     Route::get('issues/{id}/edit', [IssueController::class, 'edit']);
     Route::put('issues/{id}', [IssueController::class, 'update']);
     Route::delete('issues/{id}', [IssueController::class, 'destroy']);
 
     Route::get('issues', [IssueController::class, 'index']);
-
 });

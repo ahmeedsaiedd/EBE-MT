@@ -3,13 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Issue;
+use App\Services\IssueService;
 use Illuminate\Http\Request;
 
 class IssueController extends Controller
 {
+    public function __construct(
+        private IssueService $issueService,
+    ) {
+    }
+
     public function index()
     {
-        $issues = issue::all();
+        $issues = $this->issueService->getAllIssuees();
         return view('issues.index', compact('issues'));
     }
 
@@ -20,8 +26,8 @@ class IssueController extends Controller
 
     public function store(Request $request)
     {
-        issue::create($request->all());
-        return redirect('issues')->with('success', 'issue created successfully.');
+        $this->issueService->storeNewIssue($request);
+        return redirect('/')->with('success', 'issue created successfully.');
     }
 
     public function edit($id)
