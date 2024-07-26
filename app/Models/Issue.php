@@ -14,4 +14,9 @@ class Issue extends Model
         'name',
         'type'
     ];
+
+    public function attachments()
+    {
+        return $this->hasMany(Attachment::class);
+    }
 }

@@ -6,25 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     *
-     * @return void
-     */
-
     public function up()
     {
-        Schema::create('projects', function (Blueprint $table) {
+        Schema::create('statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('type'); // Change from integer to string
             $table->timestamps();
+            $table->softDeletes();
         });
     }
-
-
     public function down()
     {
-        Schema::dropIfExists('projects');
+        Schema::dropIfExists('statuses');
     }
 };
