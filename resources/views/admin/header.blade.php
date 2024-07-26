@@ -218,7 +218,7 @@
                                 <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                                 <select name="status_id" id="status_id"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    @foreach($statues as $status)
+                                    @foreach($statuses as $status)
                                     <option value="{{ $status->id }}">{{ $status->name }}</option>
                                     @endforeach
                                 </select>
