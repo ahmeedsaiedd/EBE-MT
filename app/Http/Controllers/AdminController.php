@@ -14,20 +14,25 @@ class AdminController extends Controller
         private StatusService $statusService
     ) {
     }
-    public function view_userstory()
+    public function Timeline()
     {
         $projects = $this->projectSerivce->getAllProjetcs();
         $users = $this->usersService->getAllUsers();
-        return view('admin.userstory', compact('projects', 'users'));
+        $statuses = $this->statusService->getAllStatuses();
+
+        return view('admin.userstory', compact('projects', 'users', 'statuses'));
+
     }
     public function View()
     {
         $projects = $this->projectSerivce->getAllProjetcs();
         $users = $this->usersService->getAllUsers();
-        return view('admin.userstory', compact('projects', 'users'));
+        $statuses = $this->statusService->getAllStatuses();
+
+        return view('admin.userstory', compact('projects', 'users', 'statuses'));
     }
 
-    public function view_board()
+    public function Board()
     {
         $users = $this->usersService->getAllUsers();
         $projects = $this->projectSerivce->getAllProjetcs();
@@ -36,12 +41,13 @@ class AdminController extends Controller
         return view('admin.board', compact('projects', 'users', 'statuses'));
     }
 
-    public function view_calender()
+    public function Calender()
     {
         $users = $this->usersService->getAllUsers();
         $projects = $this->projectSerivce->getAllProjetcs();
+        $statuses = $this->statusService->getAllStatuses();
 
-        return view('admin.calender', compact('projects', 'users'));
+        return view('admin.calender', compact('projects', 'users' , 'statuses'));
     }
 
     public function view_createproject()

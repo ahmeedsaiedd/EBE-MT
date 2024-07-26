@@ -29,9 +29,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('redirect', [HomeController::class, 'redirect']);
 
-    Route::get('view_userstory', [AdminController::class, 'view_userstory']);
-    Route::get('view_board', [AdminController::class, 'view_board']);
-    Route::get('view_calender', [AdminController::class, 'view_calender']);
+    Route::get('Timeline', [AdminController::class, 'Timeline']);
+    Route::get('Board', [AdminController::class, 'Board']);
+    Route::get('Calender', [AdminController::class, 'Calender']);
     Route::get('view_createproject', [AdminController::class, 'view_createproject']);
 
     Route::post('/UserStory', [AdminController::class, 'UserStory']);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kanban Board</title>
+    <title>EBE Board</title>
     <link href="https://cdn.jsdelivr.net/npm/flowbite@latest/dist/flowbite.min.css" rel="stylesheet">
     <style>
         body {
@@ -36,18 +36,18 @@
         .kanban-board {
             display: flex;
             gap: 0.5rem;
-            flex-wrap: wrap; /* Changed from nowrap to wrap */
+            flex-wrap: wrap;
             overflow-x: auto;
         }
         .kanban-column {
-            flex: 1 1 200px; /* Allows columns to shrink but not grow beyond a certain size */
-            max-width: 300px; /* Set max width for each column */
+            flex: 1 1 200px;
+            max-width: 300px;
             border-radius: 8px;
             padding: 1rem;
-            background-color: #f9fafb; /* Light background for better contrast */
+            background-color: #f9fafb;
             min-width: 200px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box; /* Ensures padding and border are included in the width */
+            box-sizing: border-box;
         }
         .kanban-column h2 {
             font-size: 1.25rem;
@@ -57,14 +57,14 @@
         .kanban-item {
             background-color: #ffffff;
             border-radius: 0.375rem;
-            padding: 1rem; /* Adjust padding as needed */
-            margin-bottom: 1rem; /* Increased margin to add space between tasks */
+            padding: 1rem;
+            margin-bottom: 1rem;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
             cursor: pointer;
             transition: background-color 0.2s ease;
         }
         .kanban-item:hover {
-            background-color: #f1f5f9; /* Slightly darker on hover */
+            background-color: #f1f5f9;
         }
         .kanban-column.todo {
             background-color: #e0e0e0;
@@ -79,7 +79,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            margin-bottom: 1rem; /* Added margin below the form */
+            margin-bottom: 1rem;
         }
         .new-task-input {
             flex: 1;
@@ -128,23 +128,30 @@
         .board-creation-button:hover {
             background-color: #0056b3;
         }
+        .hidden {
+            display: none;
+        }
     </style>
 </head>
 <body>
-    <div class="sidebar z-20 hidden overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0">
+    @include('admin.css')
+
+    <div
+      class="flex h-screen bg-gray-50 dark:bg-gray-900"
+      :class="{ 'overflow-hidden': isSideMenuOpen }"
+    >
         @include('admin.sidebar')
     </div>
     <div class="header">
         @include('admin.header')
     </div>
-    <div class="">
+    <div class="main-content">
         <h1 class="text-2xl font-bold mb-4">Board</h1>
         <div class="board-creation-form">
             <input type="text" class="board-creation-input" id="board-name" placeholder="New Board Name">
             <button type="button" class="board-creation-button" id="create-board">Create Board</button>
         </div>
         <div class="kanban-board" id="kanban-board">
-            <!-- Existing columns will go here -->
             <div class="kanban-column todo" id="todo">
                 <h2>To Do</h2>
                 <form class="new-task-form">
@@ -153,11 +160,9 @@
                 </form>
                 <div class="kanban-item" draggable="true">
                     <div class="font-medium">Task 1</div>
-                    {{-- <div class="text-sm text-gray-600">Description for task 1</div> --}}
                 </div>
                 <div class="kanban-item" draggable="true">
                     <div class="font-medium">Task 2</div>
-                    {{-- <div class="text-sm text-gray-600">Description for task 2</div> --}}
                 </div>
             </div>
             <div class="kanban-column in-progress" id="in-progress">
@@ -168,11 +173,9 @@
                 </form>
                 <div class="kanban-item" draggable="true">
                     <div class="font-medium">Task 3</div>
-                    {{-- <div class="text-sm text-gray-600">Description for task 3</div> --}}
                 </div>
                 <div class="kanban-item" draggable="true">
                     <div class="font-medium">Task 4</div>
-                    {{-- <div class="text-sm text-gray-600">Description for task 4</div> --}}
                 </div>
             </div>
             <div class="kanban-column done" id="done">
@@ -183,34 +186,34 @@
                 </form>
                 <div class="kanban-item" draggable="true">
                     <div class="font-medium">Task 5</div>
-                    {{-- <div class="text-sm text-gray-600">Description for task 5</div> --}}
                 </div>
                 <div class="kanban-item" draggable="true">
                     <div class="font-medium">Task 6</div>
-                    {{-- <div class="text-sm text-gray-600">Description for task 6</div> --}}
                 </div>
             </div>
         </div>
     </div>
-    @include('admin.script')
+    <script>
+        @include('admin.script')
+    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const draggables = document.querySelectorAll('.kanban-item');
             const columns = document.querySelectorAll('.kanban-column');
-
+    
             function addDragAndDrop() {
                 const draggables = document.querySelectorAll('.kanban-item');
                 const columns = document.querySelectorAll('.kanban-column');
-
+    
                 draggables.forEach(draggable => {
                     draggable.addEventListener('dragstart', () => {
                         draggable.classList.add('dragging');
                     });
-
+    
                     draggable.addEventListener('dragend', () => {
                         draggable.classList.remove('dragging');
                     });
-
+    
                     draggable.addEventListener('dblclick', () => {
                         if (!draggable.classList.contains('editable')) {
                             const input = document.createElement('input');
@@ -219,22 +222,22 @@
                             draggable.innerHTML = '';
                             draggable.appendChild(input);
                             input.focus();
-
+    
                             input.addEventListener('blur', () => {
                                 saveTask(draggable, input);
                             });
-
+    
                             input.addEventListener('keydown', (e) => {
                                 if (e.key === 'Enter') {
                                     saveTask(draggable, input);
                                 }
                             });
-
+    
                             draggable.classList.add('editable');
                         }
                     });
                 });
-
+    
                 columns.forEach(column => {
                     column.addEventListener('dragover', (e) => {
                         e.preventDefault();
@@ -248,12 +251,10 @@
                     });
                 });
             }
-
-            addDragAndDrop();
-
+    
             function getDragAfterElement(column, y) {
                 const draggableElements = [...column.querySelectorAll('.kanban-item:not(.dragging)')];
-
+    
                 return draggableElements.reduce((closest, child) => {
                     const box = child.getBoundingClientRect();
                     const offset = y - box.top - box.height / 2;
@@ -264,84 +265,90 @@
                     }
                 }, { offset: Number.NEGATIVE_INFINITY }).element;
             }
-
-            document.getElementById('create-board').addEventListener('click', function() {
-                const boardName = document.getElementById('board-name').value.trim();
-                if (boardName !== '') {
-                    const newBoard = document.createElement('div');
-                    newBoard.classList.add('kanban-column');
-                    newBoard.innerHTML = `
-                        <h2>${boardName}</h2>
-                        <form class="new-task-form">
-                            <input type="text" class="new-task-input" placeholder="New Task">
-                            <button type="submit" class="new-task-button">Add</button>
-                        </form>
-                    `;
-
-                    document.getElementById('kanban-board').appendChild(newBoard);
-                    document.getElementById('board-name').value = '';
-
-                    const newTaskForms = newBoard.querySelectorAll('.new-task-form');
-                    newTaskForms.forEach(form => {
-                        form.addEventListener('submit', function(e) {
-                            e.preventDefault();
-                            const input = this.querySelector('.new-task-input');
-                            const taskText = input.value.trim();
-                            if (taskText !== '') {
-                                const newTask = document.createElement('div');
-                                newTask.classList.add('kanban-item');
-                                newTask.setAttribute('draggable', 'true');
-                                newTask.innerHTML = `
-                                    <div class="font-medium">${taskText}</div>
-                                    <div class="text-sm text-gray-600">Description</div>
-                                `;
-
-                                this.parentElement.appendChild(newTask);
-                                input.value = '';
-
-                                newTask.addEventListener('dragstart', () => {
-                                    newTask.classList.add('dragging');
-                                });
-
-                                newTask.addEventListener('dragend', () => {
-                                    newTask.classList.remove('dragging');
-                                });
-
-                                newTask.addEventListener('dblclick', () => {
-                                    if (!newTask.classList.contains('editable')) {
-                                        const input = document.createElement('input');
-                                        input.type = 'text';
-                                        input.value = newTask.textContent.trim();
-                                        newTask.innerHTML = '';
-                                        newTask.appendChild(input);
-                                        input.focus();
-
-                                        input.addEventListener('blur', () => {
-                                            saveTask(newTask, input);
-                                        });
-
-                                        input.addEventListener('keydown', (e) => {
-                                            if (e.key === 'Enter') {
-                                                saveTask(newTask, input);
-                                            }
-                                        });
-
-                                        newTask.classList.add('editable');
-                                    }
-                                });
-                            }
-                        });
-                    });
-
+    
+            function saveTask(draggable, input) {
+                const newValue = input.value.trim();
+                if (newValue !== '') {
+                    draggable.innerHTML = `<div class="font-medium">${newValue}</div>`;
+                } else {
+                    draggable.innerHTML = '<div class="font-medium">Untitled Task</div>';
+                }
+                draggable.classList.remove('editable');
+            }
+    
+            function addNewTask(event, column) {
+                event.preventDefault();
+                const input = column.querySelector('.new-task-input');
+                const taskText = input.value.trim();
+                if (taskText !== '') {
+                    const newTask = document.createElement('div');
+                    newTask.classList.add('kanban-item');
+                    newTask.setAttribute('draggable', 'true');
+                    newTask.innerHTML = `<div class="font-medium">${taskText}</div>`;
+                    column.appendChild(newTask);
+                    input.value = '';
                     addDragAndDrop();
                 }
+            }
+    
+            document.querySelectorAll('.new-task-form').forEach(form => {
+                form.addEventListener('submit', function(event) {
+                    const column = event.target.closest('.kanban-column');
+                    addNewTask(event, column);
+                });
             });
-
-            function saveTask(task, input) {
-                task.innerHTML = input.value.trim();
-                task.classList.remove('editable');
+    
+            addDragAndDrop();
+        });
+    
+        document.getElementById('create-board').addEventListener('click', function() {
+            const boardName = document.getElementById('board-name').value.trim();
+            if (boardName !== '') {
+                const boardContainer = document.createElement('div');
+                boardContainer.classList.add('kanban-column');
+    
+                boardContainer.innerHTML = `
+                    <h2>${boardName}</h2>
+                    <form class="new-task-form">
+                        <input type="text" class="new-task-input" placeholder="New Task">
+                        <button type="submit" class="new-task-button">Add</button>
+                    </form>
+                `;
+    
+                document.getElementById('kanban-board').appendChild(boardContainer);
+    
+                boardContainer.querySelector('.new-task-form').addEventListener('submit', function(event) {
+                    addNewTask(event, boardContainer);
+                });
+    
+                addDragAndDrop();
+                document.getElementById('board-name').value = '';
             }
         });
+        document.getElementById('dropdownButton').addEventListener('click', function () {
+            const menu = document.getElementById('dropdownMenu');
+            menu.classList.toggle('hidden');
+        });
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function (event) {
+            const button = document.getElementById('dropdownButton');
+            const menu = document.getElementById('dropdownMenu');
+            if (!button.contains(event.target) && !menu.contains(event.target)) {
+                menu.classList.add('hidden');
+            }
+        });
+        dropdownButton.addEventListener('click', function () {
+    if (activeBtn === dropdownButton) {
+        closeAllDropdowns();
+    } else {
+        closeAllDropdowns();
+        dropdownMenu.classList.add('show');
+        dropdownButton.classList.add('active');
+        activeBtn = dropdownButton;
+    }
+});
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/flowbite@latest/dist/flowbite.min.js"></script>
 </body>
 </html>

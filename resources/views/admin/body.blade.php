@@ -148,7 +148,7 @@
                   <p
                     class="text-lg font-semibold text-gray-700 dark:text-gray-200"
                   >
-                    2
+                  {{$issueNo}}
                   </p>
                 </div>
               </div>

@@ -180,7 +180,8 @@
                             aria-label="submenu">
                             <li
                                 class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
-                                <a class="flex items-center w-full" href="{{ url('view_userstory') }}">
+                                {{-- <a class="flex items-center w-full" href="{{ url('view_userstory') }}"> --}}
+                                    <a class="flex items-center w-full" href="{{ url('Timeline') }}">
                                     <svg width="24" height="24" viewBox="0 0 24 24" role="presentation">
                                         <path
                                             d="M6 2h10a3 3 0 010 6H6a3 3 0 110-6zm0 2a1 1 0 100 2h10a1 1 0 000-2H6zm4 5h8a3 3 0 010 6h-8a3 3 0 010-6zm0 2a1 1 0 000 2h8a1 1 0 000-2h-8zm-4 5h6a3 3 0 010 6H6a3 3 0 010-6zm0 2a1 1 0 000 2h6a1 1 0 000-2H6z"
@@ -191,7 +192,8 @@
                             </li>
                             <li
                                 class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
-                                <a class="flex items-center w-full" href="{{ 'view_board' }}">
+                                {{-- <a class="flex items-center w-full" href="{{ 'view_board' }}"> --}}
+                                    <a class="flex items-center w-full" href="{{ 'Board' }}">
                                     <svg width="24" height="24" viewBox="0 0 24 24" role="presentation">
                                         <g fill="currentColor">
                                             <path
@@ -205,7 +207,7 @@
                             </li>
                             <li
                                 class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
-                                <a class="flex items-center w-full" href="{{ url('view_calender') }}">
+                                <a class="flex items-center w-full" href="{{ url('Calender') }}">
                                     <span aria-hidden="true" class="css-snhnyn"
                                         style="--icon-primary-color: currentColor; --icon-secondary-color: var(--ds-surface, #FFFFFF);">
                                         <svg width="24" height="24" viewBox="0 0 24 24" role="presentation">

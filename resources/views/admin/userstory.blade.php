@@ -1,4 +1,8 @@
 <!DOCTYPE html>
+<head>
+  <title>EBE Timeline</title>
+
+</head>
 <html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
   @include('admin.css')
   <body>

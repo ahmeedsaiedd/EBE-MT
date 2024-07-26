@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\{UsersService, ProjectService, StatusService};
+use App\Services\{IssueService, UsersService, ProjectService, StatusService};
 
 class DashboardController extends Controller
 {
@@ -10,6 +10,7 @@ class DashboardController extends Controller
         private UsersService $userService,
         private ProjectService $projectSerivce,
         private StatusService $statusService,
+        private IssueService $issueService,
 
     ) {
     }
@@ -18,10 +19,12 @@ class DashboardController extends Controller
     {
         $projects = $this->projectSerivce->getAllProjetcs();
         $users = $this->userService->getAllUsers();
-        $statues = $this->statusService->getAllStatuses();
+        $issue = $this->issueService->getAllIssuees();
+        $statuses = $this->statusService->getAllStatuses();
         $usersNo = $users->count();
         $projectsNo = $projects->count();
+        $issueNo = $issue->count();
 
-        return view('admin.home', compact('users', 'usersNo', 'projectsNo', 'projects', 'statues'));
+        return view('admin.home', compact('users', 'usersNo', 'projectsNo', 'projects', 'statuses' , 'issueNo'));
     }
 }
