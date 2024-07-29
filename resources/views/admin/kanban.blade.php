@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
     @include('admin.css')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,21 +15,25 @@
         body {
             font-family: 'Nunito', sans-serif;
         }
+
         .kanban-board {
             background-color: #f0f4f8;
             padding: 2rem;
             border-radius: 0.5rem;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .kanban-card {
             background-color: #fff;
             border-radius: 0.5rem;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s ease-in-out;
         }
+
         .kanban-card:hover {
             transform: translateY(-3px);
         }
+
         .kanban-task {
             background-color: #fff;
             border-radius: 0.375rem;
@@ -36,28 +43,36 @@
             cursor: move;
             position: relative;
         }
+
         .kanban-task:hover {
             transform: scale(1.02);
         }
-        .add-task-btn, .add-card-btn {
+
+        .add-task-btn,
+        .add-card-btn {
             background-color: #1d4ed8;
             color: #fff;
             padding: 0.5rem 1rem;
             border-radius: 0.375rem;
             transition: background-color 0.2s;
         }
-        .add-task-btn:hover, .add-card-btn:hover {
+
+        .add-task-btn:hover,
+        .add-card-btn:hover {
             background-color: #2563eb;
         }
+
         .kanban-container {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 1rem;
         }
+
         .color-picker {
             margin-left: 0.5rem;
             cursor: pointer;
         }
+
         .task-icons {
             position: absolute;
             top: 0.5rem;
@@ -65,17 +80,21 @@
             display: flex;
             gap: 0.5rem;
         }
+
         .task-icons button {
             background: none;
             border: none;
             cursor: pointer;
         }
+
         .task-icons .fa {
             color: #999;
         }
+
         .task-icons .fa:hover {
             color: #333;
         }
+
         /* Modal Styles */
         .modal {
             position: fixed;
@@ -89,10 +108,12 @@
             opacity: 0;
             transition: opacity 0.3s ease;
         }
+
         .modal.show {
             visibility: visible;
             opacity: 1;
         }
+
         .modal-content {
             background: white;
             padding: 2rem;
@@ -101,14 +122,17 @@
             width: 90%;
             max-width: 500px;
         }
+
         .modal-header {
             border-bottom: 1px solid #e5e7eb;
             padding-bottom: 1rem;
             margin-bottom: 1rem;
         }
+
         .modal-header h2 {
             margin: 0;
         }
+
         .modal-footer {
             border-top: 1px solid #e5e7eb;
             padding-top: 1rem;
@@ -116,15 +140,18 @@
             display: flex;
             justify-content: flex-end;
         }
+
         .modal-footer button {
             margin-left: 0.5rem;
         }
+
         .modal-body {
             max-height: 300px;
             overflow-y: auto;
         }
     </style>
 </head>
+
 <body>
     <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
         @include('admin.sidebar')
@@ -136,8 +163,10 @@
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold" contenteditable="true">To Do</h3>
                         <div class="flex gap-2 items-center">
-                            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-todo')"><i class="fas fa-trash-alt"></i></button>
-                            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-todo')"><i id="collapse-todo" class="fas fa-chevron-down"></i></button>
+                            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-todo')"><i
+                                    class="fas fa-trash-alt"></i></button>
+                            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-todo')"><i
+                                    id="collapse-todo" class="fas fa-chevron-down"></i></button>
                             <button class="add-task-btn" onclick="addTask('card-todo')">Add Task</button>
                         </div>
                     </div>
@@ -150,8 +179,10 @@
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold" contenteditable="true">In Progress</h3>
                         <div class="flex gap-2 items-center">
-                            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-inprogress')"><i class="fas fa-trash-alt"></i></button>
-                            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-inprogress')"><i id="collapse-inprogress" class="fas fa-chevron-down"></i></button>
+                            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-inprogress')"><i
+                                    class="fas fa-trash-alt"></i></button>
+                            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-inprogress')"><i
+                                    id="collapse-inprogress" class="fas fa-chevron-down"></i></button>
                             <button class="add-task-btn" onclick="addTask('card-inprogress')">Add Task</button>
                         </div>
                     </div>
@@ -164,8 +195,10 @@
                     <div class="flex justify-between items-center mb-4">
                         <h3 class="text-lg font-semibold" contenteditable="true">Done</h3>
                         <div class="flex gap-2 items-center">
-                            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-done')"><i class="fas fa-trash-alt"></i></button>
-                            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-done')"><i id="collapse-done" class="fas fa-chevron-down"></i></button>
+                            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-done')"><i
+                                    class="fas fa-trash-alt"></i></button>
+                            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-done')"><i
+                                    id="collapse-done" class="fas fa-chevron-down"></i></button>
                             <button class="add-task-btn" onclick="addTask('card-done')">Add Task</button>
                         </div>
                     </div>
@@ -185,7 +218,8 @@
                 <h2 class="text-lg font-semibold">Move Task</h2>
             </div>
             <div class="modal-body">
-                <label for="moveTaskColumnSelect" class="block text-sm font-medium text-gray-700 mb-2">Select Column:</label>
+                <label for="moveTaskColumnSelect" class="block text-sm font-medium text-gray-700 mb-2">Select
+                    Column:</label>
                 <select id="moveTaskColumnSelect" class="block w-full border-gray-300 rounded-md shadow-sm">
                     <!-- Options will be populated dynamically -->
                 </select>
@@ -209,10 +243,10 @@
                 Sortable.create(container.querySelector('div'), {
                     group: 'tasks',
                     animation: 150,
-                    onStart: function (evt) {
+                    onStart: function(evt) {
                         evt.item.classList.add('dragging');
                     },
-                    onEnd: function (evt) {
+                    onEnd: function(evt) {
                         evt.item.classList.remove('dragging');
                     }
                 });
@@ -220,20 +254,39 @@
         }
 
         function addTask(cardId) {
-            const taskList = document.getElementById(cardId.replace('card-', ''));
-            const task = document.createElement('div');
-            task.className = 'kanban-task';
-            task.innerHTML = `
-                <div class="task-content" contenteditable="true">New Task</div>
-                <div class="task-icons">
-                    <button onclick="editTask(this)"><i class="fas fa-edit"></i></button>
-                    <button onclick="deleteTask(this)"><i class="fas fa-trash-alt"></i></button>
-                    <button onclick="moveTask(this)"><i class="fas fa-arrows-alt"></i></button>
-                </div>
-            `;
-            taskList.appendChild(task);
-            initializeSortables();
-        }
+    const taskList = document.getElementById(cardId.replace('card-', ''));
+    const task = document.createElement('div');
+    task.className = 'kanban-task';
+
+    // Construct the form action URL
+    const formActionUrl = `/kanban/cards/1/tasks`;
+
+    task.innerHTML = `
+        <form action="${formActionUrl}" method="POST" class="task-form">
+            <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}" />
+            <input type="hidden" name="card_id" value="1" />
+            <input type="text" name="name" class="task-content" value="New Task" />
+            <div class="task-icons">
+                <button type="button" onclick="editTask(this)"><i class="fas fa-edit"></i></button>
+                <button type="button" onclick="deleteTask(this)"><i class="fas fa-trash-alt"></i></button>
+                <button type="button" onclick="moveTask(this)"><i class="fas fa-arrows-alt"></i></button>
+            </div>
+        </form>
+    `;
+
+    taskList.appendChild(task);
+
+    // Add event listener to submit form on blur
+    task.querySelector('.task-content').addEventListener('blur', function() {
+        this.closest('form').submit();
+    });
+
+    // Initialize sortables again to include the new task
+    initializeSortables();
+}
+
+
+
 
         function deleteTask(btn) {
             btn.closest('.kanban-task').remove();
@@ -327,4 +380,5 @@
         });
     </script>
 </body>
+
 </html>

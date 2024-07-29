@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Task;
 use App\Services\{ProjectService, UsersService, StatusService};
 use Illuminate\Http\Request;
 
@@ -34,11 +35,12 @@ class AdminController extends Controller
 
     public function Board()
     {
+        $tasks= Task::all();
         $users = $this->usersService->getAllUsers();
         $projects = $this->projectSerivce->getAllProjetcs();
         $statuses = $this->statusService->getAllStatuses();
 
-        return view('admin.board', compact('projects', 'users', 'statuses'));
+        return view('admin.kanban', compact('projects', 'users', 'statuses','tasks'));
     }
 
     public function Calender()

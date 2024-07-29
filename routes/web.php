@@ -6,6 +6,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\KanbanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,4 +64,28 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('/admin/userstory', [AdminController::class, 'userstory'])->name('admin.userstory');
 
     Route::get('issues', [IssueController::class, 'index']);
+
+
+    // Route to show the Kanban board
+    Route::get('/kanban', [KanbanController::class, 'index'])->name('kanban.index');
+
+    // Route to add a new card
+    Route::post('/kanban/cards', [KanbanController::class, 'storeCard'])->name('kanban.storeCard');
+
+    // Route to delete a card
+    Route::delete('/kanban/cards/{id}', [KanbanController::class, 'destroyCard'])->name('kanban.destroyCard');
+
+    // Route to add a new task to a card
+    Route::post('/kanban/cards/{cardId}/tasks', [KanbanController::class, 'storeTask'])->name('kanban.storeTask');
+
+    // Route to delete a task
+    Route::delete('/kanban/tasks/{id}', [KanbanController::class, 'destroyTask'])->name('kanban.destroyTask');
+
+    // Route to update a task's column (move task)
+    Route::put('/kanban/tasks/{id}/move', [KanbanController::class, 'moveTask'])->name('kanban.moveTask');
+
+    // Route to update card information (e.g., title)
+    Route::put('/kanban/cards/{id}', [KanbanController::class, 'updateCard'])->name('kanban.updateCard');
+
+    Route::get('/kanban', [KanbanController::class, 'index'])->name('kanban.index');
 });
