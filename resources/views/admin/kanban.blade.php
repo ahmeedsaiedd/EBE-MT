@@ -158,22 +158,39 @@
         @include('admin.header')
         <div class="container mx-auto kanban-board">
             <div class="kanban-container" id="kanbanContainer">
-                <!-- To Do Card -->
-                <div class="bg-gray-200 p-4 rounded kanban-card" id="card-todo">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold" contenteditable="true">To Do</h3>
-                        <div class="flex gap-2 items-center">
-                            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-todo')"><i
-                                    class="fas fa-trash-alt"></i></button>
-                            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-todo')"><i
-                                    id="collapse-todo" class="fas fa-chevron-down"></i></button>
-                            <button class="add-task-btn" onclick="addTask('card-todo')">Add Task</button>
-                        </div>
-                    </div>
-                    <div id="todo" class="space-y-2">
-                        <!-- Tasks will be added here -->
-                    </div>
+               <!-- To Do Card -->
+<div class="bg-gray-200 p-4 rounded kanban-card" id="card-todo">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="text-lg font-semibold" contenteditable="true">To Do</h3>
+        <div class="flex gap-2 items-center">
+            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-todo')">
+                <i class="fas fa-trash-alt"></i>
+            </button>
+            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-todo')">
+                <i id="collapse-todo" class="fas fa-chevron-down"></i>
+            </button>
+            <button class="add-task-btn" onclick="addTask('card-todo')">Add Task</button>
+        </div>
+    </div>
+    <div id="todo" class="space-y-2">
+        @foreach($tasks as $task)
+        <div class="kanban-task" data-task-id="{{ $task->id }}">
+            <form action="{{ route('kanban.updateTask', $task->id) }}" method="POST" class="task-form">
+                @csrf
+                @method('PUT')
+                <input type="text" name="name" class="task-content" value="{{ $task->name }}" />
+                <div class="task-icons">
+                    <button type="button" onclick="editTask(this)"><i class="fas fa-edit"></i></button>
+                    <button type="button" onclick="deleteTask(this)"><i class="fas fa-trash-alt"></i></button>
+                    <button type="button" onclick="moveTask(this)"><i class="fas fa-arrows-alt"></i></button>
                 </div>
+            </form>
+        </div>
+        @endforeach
+    </div>
+    
+</div>
+
                 <!-- In Progress Card -->
                 <div class="bg-yellow-200 p-4 rounded kanban-card" id="card-inprogress">
                     <div class="flex justify-between items-center mb-4">
@@ -288,9 +305,29 @@
 
 
 
-        function deleteTask(btn) {
-            btn.closest('.kanban-task').remove();
-        }
+function deleteTask(btn) {
+    const taskId = btn.closest('.kanban-task').dataset.taskId;
+
+    if (confirm('Are you sure you want to delete this task?')) {
+        fetch(`/kanban/tasks/${taskId}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            }
+        }).then(response => {
+            if (response.ok) {
+                btn.closest('.kanban-task').remove();
+            } else {
+                alert('Failed to delete the task.');
+            }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while deleting the task.');
+        });
+    }
+}
+
 
         function editTask(btn) {
             const taskContent = btn.closest('.kanban-task').querySelector('.task-content');
@@ -314,30 +351,43 @@
         }
 
         function moveTask(btn) {
-            taskToMove = btn.closest('.kanban-task');
-            const columnSelect = document.getElementById('moveTaskColumnSelect');
-            const columns = document.querySelectorAll('.kanban-card');
-            columnSelect.innerHTML = '';
-            columns.forEach(column => {
-                const option = document.createElement('option');
-                option.value = column.id;
-                option.textContent = column.querySelector('h3').textContent;
-                columnSelect.appendChild(option);
-            });
-            document.getElementById('moveTaskModal').classList.add('show');
-        }
+    taskToMove = btn.closest('.kanban-task');
+    const columnSelect = document.getElementById('moveTaskColumnSelect');
+    const columns = document.querySelectorAll('.kanban-card');
+    columnSelect.innerHTML = '';
+    columns.forEach(column => {
+        const option = document.createElement('option');
+        option.value = column.id;
+        option.textContent = column.querySelector('h3').textContent;
+        columnSelect.appendChild(option);
+    });
+    document.getElementById('moveTaskModal').classList.add('show');
+}
 
-        document.getElementById('confirmMoveTaskBtn').addEventListener('click', () => {
-            const columnId = document.getElementById('moveTaskColumnSelect').value;
-            if (taskToMove && columnId) {
-                document.getElementById(columnId.replace('card-', '')).appendChild(taskToMove);
-                document.getElementById('moveTaskModal').classList.remove('show');
+document.getElementById('confirmMoveTaskBtn').addEventListener('click', () => {
+    const columnId = document.getElementById('moveTaskColumnSelect').value;
+    if (taskToMove && columnId) {
+        document.getElementById(columnId.replace('card-', '')).appendChild(taskToMove);
+        document.getElementById('moveTaskModal').classList.remove('show');
+
+        fetch(`/kanban/tasks/${taskToMove.dataset.taskId}/move`, {
+            method: 'PUT',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ card_id: columnId.replace('card-', '') })
+        }).then(response => {
+            if (!response.ok) {
+                alert('Failed to update task.');
             }
+        }).catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while updating the task.');
         });
+    }
+});
 
-        document.getElementById('cancelMoveTaskBtn').addEventListener('click', () => {
-            document.getElementById('moveTaskModal').classList.remove('show');
-        });
 
         function addCard() {
             colorIndex++;
@@ -378,6 +428,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             initializeSortables();
         });
+        
     </script>
 </body>
 

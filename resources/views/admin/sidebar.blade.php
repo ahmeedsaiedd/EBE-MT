@@ -178,18 +178,25 @@
                             x-transition:leave-start="opacity-100 max-h-xl" x-transition:leave-end="opacity-0 max-h-0"
                             class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:bg-gray-900"
                             aria-label="submenu">
-                            <li
-                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
-                                {{-- <a class="flex items-center w-full" href="{{ url('view_userstory') }}"> --}}
-                                    <a class="flex items-center w-full" href="{{ url('Timeline') }}">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" role="presentation">
-                                        <path
-                                            d="M6 2h10a3 3 0 010 6H6a3 3 0 110-6zm0 2a1 1 0 100 2h10a1 1 0 000-2H6zm4 5h8a3 3 0 010 6h-8a3 3 0 010-6zm0 2a1 1 0 000 2h8a1 1 0 000-2h-8zm-4 5h6a3 3 0 010 6H6a3 3 0 010-6zm0 2a1 1 0 000 2h6a1 1 0 000-2H6z"
-                                            fill="currentColor" fill-rule="evenodd"></path>
-                                    </svg>
-                                    Timeline
+                            <li class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+                                <a class="flex items-center w-full" href="{{ url('Issue') }}">
+                                    <span aria-hidden="true" class="css-snhnyn"
+                                        style="--icon-primary-color: currentColor; --icon-secondary-color: var(--ds-surface, #FFFFFF);">
+                                        <svg width="24" height="24" viewBox="0 0 24 24" role="presentation">
+                                            <g fill="currentColor" fill-rule="evenodd">
+                                                <path
+                                                    d="M5 12.991c0 .007 14.005.009 14.005.009C18.999 13 19 5.009 19 5.009 19 5.002 4.995 5 4.995 5 5.001 5 5 12.991 5 12.991zM3 5.01C3 3.899 3.893 3 4.995 3h14.01C20.107 3 21 3.902 21 5.009v7.982c0 1.11-.893 2.009-1.995 2.009H4.995A2.004 2.004 0 013 12.991V5.01zM19 19c-.005 1.105-.9 2-2.006 2H7.006A2.009 2.009 0 015 19h14zm1-3a2.002 2.002 0 01-1.994 2H5.994A2.003 2.003 0 014 16h16z"
+                                                    fill-rule="nonzero"></path>
+                                                <path
+                                                    d="M10.674 11.331c.36.36.941.36 1.3 0l2.758-2.763a.92.92 0 00-1.301-1.298l-2.108 2.11-.755-.754a.92.92 0 00-1.3 1.3l1.406 1.405z">
+                                                </path>
+                                            </g>
+                                        </svg>
+                                    </span>
+                                    Issue
                                 </a>
                             </li>
+                            
                             <li
                                 class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                                 {{-- <a class="flex items-center w-full" href="{{ 'view_board' }}"> --}}
@@ -244,7 +251,7 @@
                                     List
                                 </a>
                             </li>
-                            <li
+                            {{-- <li
                                 class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                                 <a class="flex items-center w-full" href="forms.html">
                                     <span aria-hidden="true" class="css-snhnyn"
@@ -262,39 +269,11 @@
                                     </span>
                                     Issues
                                 </a>
-                            </li>
+                            </li> --}}
                         </ul>
                     </template>
                 </li>
-                <li class="relative px-6 py-3">
-                    <button id="spaces-btn"
-                        class="inline-flex items-center w-full text-sm font-semibold text-gray-800 dark:text-gray-200 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none">
-                        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
-                            <path d="M4 8V4h16v4M4 12v4h16v-4M4 16v4h16v-4" />
-                        </svg>
-                        <span class="ml-4">Spaces</span>
-                    </button>
-                
-                    <!-- Spaces Dropdown Menu -->
-                    <div id="spaces-menu"
-                        class="absolute mt-2 bg-white shadow-lg rounded-md w-48 max-h-60 overflow-y-auto z-10 hidden">
-                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
-                            <li>
-                                <button id="create-folder-btn"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
-                                    Create Folder
-                                </button>
-                            </li>
-                            <li>
-                                <button id="create-subfolder-btn"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
-                                    Create Subfolder
-                                </button>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
-                
+
 
 
 
@@ -303,74 +282,33 @@
     </aside>
 
 </body>
- <!-- Include your scripts here -->
- <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" defer></script>
- <script src="admin/assets/js/charts-lines.js" defer></script>
- <script src="admin/assets/js/charts-pie.js" defer></script>
- <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
- <script src="admin/assets/js/init-alpine.js"></script>
-
- <script>
-     document.addEventListener('DOMContentLoaded', () => {
-         // Initialize Alpine.js
-         window.Alpine = Alpine;
-         Alpine.start();
-
-         // Modal and Dropdown Logic
-         const spacesBtn = document.getElementById('spaces-btn');
-         const spacesMenu = document.getElementById('spaces-menu');
-         const createFolderBtn = document.getElementById('create-folder-btn');
-         const createSubfolderBtn = document.getElementById('create-subfolder-btn');
-         
-         spacesBtn.addEventListener('click', () => {
-             spacesMenu.classList.toggle('hidden');
-         });
-
-         createFolderBtn.addEventListener('click', () => {
-             showFolderModal('Create Folder');
-         });
-
-         createSubfolderBtn.addEventListener('click', () => {
-             showFolderModal('Create Subfolder');
-         });
-
-         function showFolderModal(title) {
-             alert(`${title} Modal will be shown.`);
-         }
-
-         // Handling dropdown menu visibility
-         const dropdownButton = document.getElementById('dropdownButton');
-         const dropdownMenu = document.getElementById('dropdownMenu');
-         let activeBtn = null;
-
-         function closeAllDropdowns() {
-             if (activeBtn) {
-                 activeBtn.classList.remove('active');
-                 const menu = document.querySelector('.dropdown-menu.show');
-                 if (menu) {
-                     menu.classList.remove('show');
-                 }
-                 activeBtn = null;
-             }
-         }
-
-         dropdownButton.addEventListener('click', () => {
-             if (activeBtn === dropdownButton) {
-                 closeAllDropdowns();
-             } else {
-                 closeAllDropdowns();
-                 dropdownMenu.classList.add('show');
-                 dropdownButton.classList.add('active');
-                 activeBtn = dropdownButton;
-             }
-         });
-
-         document.addEventListener('click', (e) => {
-             if (activeBtn && !activeBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                 closeAllDropdowns();
-             }
-         });
-     });
- </script>
-
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const createProjectBtn = document.getElementById('create-project-btn');
+        const modal = document.getElementById('create-project-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const cancelBtn = document.getElementById('cancel-btn');
+        
+        // Function to open the modal
+        createProjectBtn.addEventListener('click', () => {
+            modal.classList.remove('hidden');
+        });
+        
+        // Function to close the modal
+        const closeModal = () => {
+            modal.classList.add('hidden');
+        };
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        
+        // Close the modal if the user clicks outside of it
+        window.addEventListener('click', (event) => {
+            if (event.target === modal) {
+                closeModal();
+            }
+        });
+    });
+    </script>
+    
 </html>

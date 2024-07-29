@@ -94,29 +94,29 @@
                                 class="absolute left-0 mt-2 bg-white shadow-lg rounded-md w-44 max-h-60 overflow-y-auto z-10 hidden">
                                 <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
                                     @forelse($projects->take(5) as $project)
-                                    <li>
-                                        <a href="#"
-                                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-                                            data-project="{{ $project->id }}">
-                                            {{ $project->name }}
-                                        </a>
-                                    </li>
+                                        <li>
+                                            <a href="#"
+                                                class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                                                data-project="{{ $project->id }}">
+                                                {{ $project->name }}
+                                            </a>
+                                        </li>
                                     @empty
-                                    <li>
-                                        <span class="block px-4 py-2 text-sm text-gray-700">
-                                            No projects available
-                                        </span>
-                                    </li>
+                                        <li>
+                                            <span class="block px-4 py-2 text-sm text-gray-700">
+                                                No projects available
+                                            </span>
+                                        </li>
                                     @endforelse
                                 </ul>
 
-                                @if($projects->count() > 5)
-                                <div class="px-4 py-2">
-                                    <a href="{{ route('admin.projects') }}"
-                                        class="text-blue-500 hover:underline text-sm">
-                                        See More
-                                    </a>
-                                </div>
+                                @if ($projects->count() > 5)
+                                    <div class="px-4 py-2">
+                                        <a href="{{ route('admin.projects') }}"
+                                            class="text-blue-500 hover:underline text-sm">
+                                            See More
+                                        </a>
+                                    </div>
                                 @endif
                             </div>
                         </div>
@@ -198,7 +198,8 @@
                             </button>
                         </div>
 
-                        <form id="issueForm" action="{{ route('issue.store') }}" method="POST" enctype="multipart/form-data" class="mt-4">
+                        <form id="issueForm" action="{{ route('issue.store') }}" method="POST"
+                            enctype="multipart/form-data" class="mt-4">
 
                             @csrf
                             <!-- Project Dropdown -->
@@ -207,8 +208,8 @@
                                     Project</label>
                                 <select name="project_id" id="project_id"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    @foreach($projects as $project)
-                                    <option value="{{ $project->id }}">{{ $project->name }}</option>
+                                    @foreach ($projects as $project)
+                                        <option value="{{ $project->id }}">{{ $project->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -218,8 +219,8 @@
                                 <label for="status" class="block text-sm font-medium text-gray-700">Status</label>
                                 <select name="status_id" id="status_id"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    @foreach($statuses as $status)
-                                    <option value="{{ $status->id }}">{{ $status->name }}</option>
+                                    @foreach ($statuses as $status)
+                                        <option value="{{ $status->id }}">{{ $status->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -252,10 +253,10 @@
                                 <label for="assignee" class="block text-sm font-medium text-gray-700">Assignee</label>
                                 <select name="assignee" id="assignee"
                                     class="mt-1 block w-full pl-3 pr-10 py-2 border border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
-                                    @foreach($users as $user)
-                                    @if($user->user_type != 1)
-                                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                                    @endif
+                                    @foreach ($users as $user)
+                                        @if ($user->user_type != 1)
+                                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                                        @endif
                                     @endforeach
                                 </select>
                             </div>
@@ -266,17 +267,18 @@
                                     class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                                     Cancel
                                 </button>
-                                    <button type="submit"
-                                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                        Create
-                                    </button>
+                                <button type="submit"
+                                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                    Create
+                                </button>
                                 <div id="loading"
                                     class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50 hidden">
                                     <li class="flex items-center">
                                         <div role="status">
                                             <svg aria-hidden="true"
                                                 class="w-4 h-4 me-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-                                                viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                viewBox="0 0 100 101" fill="none"
+                                                xmlns="http://www.w3.org/2000/svg">
                                                 <path
                                                     d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
                                                     fill="currentColor" />
@@ -332,9 +334,9 @@
                             class="absolute top-0 right-0 inline-block w-3 h-3 transform translate-x-1 -translate-y-1 bg-red-600 border-2 border-white rounded-full dark:border-gray-800"></span>
                     </button>
                     <template x-if="isNotificationsMenuOpen">
-                        <ul x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100"
-                            x-transition:leave-end="opacity-0" @click.away="closeNotificationsMenu"
-                            @keydown.escape="closeNotificationsMenu"
+                        <ul x-transition:leave="transition ease-in duration-150"
+                            x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                            @click.away="closeNotificationsMenu" @keydown.escape="closeNotificationsMenu"
                             class="absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md dark:text-gray-300 dark:border-gray-700 dark:bg-gray-700">
                             <li class="flex">
                                 <a class="inline-flex items-center justify-between w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800 dark:hover:bg-gray-800 dark:hover:text-gray-200"
@@ -370,7 +372,7 @@
                 <li class="relative">
                     {{-- <x-app-layout>
                         <x-app-layout> --}}
-                            <template x-if="isProfileMenuOpen">
+                    <template x-if="isProfileMenuOpen">
 
                 </li>
                 </template>
@@ -384,28 +386,68 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('createButton').addEventListener('click', function(event) {
-            event.preventDefault(); // Prevent default form submission or link action
+            document.getElementById('createButton').addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default form submission or link action
+
+                // Show the loading indicator
+                document.getElementById('loading').classList.remove('hidden');
+
+                // Delay the redirection to allow the loading indicator to be visible
+                setTimeout(function() {
+                    window.location.href = "{{ route('admin.userstory') }}";
+                }, 500); // Adjust the delay as needed
+            });
+        });
+        document.getElementById('issueForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
 
             // Show the loading indicator
             document.getElementById('loading').classList.remove('hidden');
 
-            // Delay the redirection to allow the loading indicator to be visible
-            setTimeout(function() {
-                window.location.href = "{{ route('admin.userstory') }}";
-            }, 500); // Adjust the delay as needed
-        });
+            // Create a FormData object to handle file uploads
+            var formData = new FormData(this);
+
+            // Send the form data using fetch API
+            fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    }
+                }).then(response => response.json())
+                .then(data => {
+                    // Hide the loading indicator
+                    document.getElementById('loading').classList.add('hidden');
+
+                    // Redirect to the desired route
+                    window.location.href = '{{ route('admin.userstory') }}';
+                }).catch(error => {
+                    // Handle errors
+                    console.error('Error:', error);
+                    // Hide the loading indicator
+                    document.getElementById('loading').classList.add('hidden');
+                });
+                // JavaScript to handle modal visibility
+    document.getElementById('openModalButton').addEventListener('click', function() {
+        document.getElementById('modal').classList.remove('hidden');
     });
+
+    document.getElementById('closeModalButton').addEventListener('click', function() {
+        document.getElementById('modal').classList.add('hidden');
+    });
+
+    document.addEventListener('click', function(event) {
+        if (event.target === document.getElementById('modal')) {
+            document.getElementById('modal').classList.add('hidden');
+        }
+    });
+
+    // JavaScript to handle form submission and redirection
     document.getElementById('issueForm').addEventListener('submit', function(event) {
         event.preventDefault(); // Prevent the default form submission
-
-        // Show the loading indicator
-        document.getElementById('loading').classList.remove('hidden');
-
-        // Create a FormData object to handle file uploads
-        var formData = new FormData(this);
-
-        // Send the form data using fetch API
+        const formData = new FormData(this);
         fetch(this.action, {
             method: 'POST',
             body: formData,
@@ -413,19 +455,18 @@
                 'X-Requested-With': 'XMLHttpRequest',
                 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
             }
-        }).then(response => response.json())
-          .then(data => {
-              // Hide the loading indicator
-              document.getElementById('loading').classList.add('hidden');
-
-              // Redirect to the desired route
-              window.location.href = '{{ route("admin.userstory") }}';
-          }).catch(error => {
-              // Handle errors
-              console.error('Error:', error);
-              // Hide the loading indicator
-              document.getElementById('loading').classList.add('hidden');
-          });
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = "{{ route('admin.userstory') }}";
+            } else {
+                // Handle errors or display error messages
+                console.error('Error:', data);
+            }
+        })
+        .catch(error => console.error('Error:', error));
     });
+        });
         @include('admin.script')
     </script>

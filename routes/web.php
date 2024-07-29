@@ -30,7 +30,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('redirect', [HomeController::class, 'redirect']);
 
-    Route::get('Timeline', [AdminController::class, 'Timeline']);
+    Route::get('Issue', [AdminController::class, 'Issue']);
     Route::get('Board', [AdminController::class, 'Board']);
     Route::get('Calender', [AdminController::class, 'Calender']);
     Route::get('view_createproject', [AdminController::class, 'view_createproject']);
@@ -56,6 +56,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('issues', [IssueController::class, 'index']);
     Route::get('issues/create', [IssueController::class, 'create']);
+    
     Route::post('issues', [IssueController::class, 'store'])->name('issue.store');
     Route::get('issues/{id}/edit', [IssueController::class, 'edit']);
     Route::put('issues/{id}', [IssueController::class, 'update']);
@@ -86,6 +87,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     // Route to update card information (e.g., title)
     Route::put('/kanban/cards/{id}', [KanbanController::class, 'updateCard'])->name('kanban.updateCard');
+    Route::put('/kanban/tasks/{id}', [KanbanController::class, 'updateTask'])->name('kanban.updateTask');
 
     Route::get('/kanban', [KanbanController::class, 'index'])->name('kanban.index');
 });

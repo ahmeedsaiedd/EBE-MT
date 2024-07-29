@@ -58,17 +58,15 @@ class KanbanController extends Controller
         // return response()->json(['message' => 'Task deleted']);
     }
 
-    // Move a task to a different card
     public function moveTask(Request $request, $id)
-    {
-        $request->validate([
-            'card_id' => 'required|exists:cards,id',
-        ]);
+{
+    $task = Task::findOrFail($id);
+    $task->card_id = $request->input('card_id');
+    $task->save();
 
-        $task = Task::findOrFail($id);
-        $task->update(['card_id' => $request->input('card_id')]);
-        // return response()->json($task);
-    }
+    return response()->json(['success' => true]);
+}
+
 
     // Update card information
     public function updateCard(Request $request, $id)
@@ -79,6 +77,6 @@ class KanbanController extends Controller
 
         $card = Card::findOrFail($id);
         $card->update($request->only('name'));
-        // return response()->json($card);
+        return response()->json(['message' => 'Card updated successfully!']);
     }
 }

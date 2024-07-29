@@ -15,7 +15,7 @@ class AdminController extends Controller
         private StatusService $statusService
     ) {
     }
-    public function Timeline()
+    public function Issue()
     {
         $projects = $this->projectSerivce->getAllProjetcs();
         $users = $this->usersService->getAllUsers();

@@ -14,16 +14,30 @@ class TaskController extends Controller
         return response()->json($task, 201);
     }
 
-    public function update(Request $request, Task $task)
-    {
-        $task->update($request->all());
-        return response()->json($task);
+    public function updateTask(Request $request, $id)
+{
+    $task = Task::find($id);
+    if (!$task) {
+        return response()->json(['message' => 'Task not found'], 404);
     }
 
-    public function destroy(Task $task)
-    {
+    $task->card_id = $request->input('card_id');
+    $task->save();
+
+    return response()->json(['message' => 'Task updated successfully']);
+}
+
+    public function destroyTask($id)
+{
+    $task = Task::find($id);
+    
+    if ($task) {
         $task->delete();
-        return response()->json(null, 204);
+        return response()->json(['message' => 'Task deleted successfully.'], 200);
     }
+    
+    return response()->json(['message' => 'Task not found.'], 404);
+}
+
 }
 
