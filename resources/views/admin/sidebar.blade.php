@@ -266,7 +266,35 @@
                         </ul>
                     </template>
                 </li>
-
+                <li class="relative px-6 py-3">
+                    <button id="spaces-btn"
+                        class="inline-flex items-center w-full text-sm font-semibold text-gray-800 dark:text-gray-200 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
+                            <path d="M4 8V4h16v4M4 12v4h16v-4M4 16v4h16v-4" />
+                        </svg>
+                        <span class="ml-4">Spaces</span>
+                    </button>
+                
+                    <!-- Spaces Dropdown Menu -->
+                    <div id="spaces-menu"
+                        class="absolute mt-2 bg-white shadow-lg rounded-md w-48 max-h-60 overflow-y-auto z-10 hidden">
+                        <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
+                            <li>
+                                <button id="create-folder-btn"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
+                                    Create Folder
+                                </button>
+                            </li>
+                            <li>
+                                <button id="create-subfolder-btn"
+                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 w-full text-left">
+                                    Create Subfolder
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
 
 
 
@@ -275,5 +303,74 @@
     </aside>
 
 </body>
+ <!-- Include your scripts here -->
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js" defer></script>
+ <script src="admin/assets/js/charts-lines.js" defer></script>
+ <script src="admin/assets/js/charts-pie.js" defer></script>
+ <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+ <script src="admin/assets/js/init-alpine.js"></script>
+
+ <script>
+     document.addEventListener('DOMContentLoaded', () => {
+         // Initialize Alpine.js
+         window.Alpine = Alpine;
+         Alpine.start();
+
+         // Modal and Dropdown Logic
+         const spacesBtn = document.getElementById('spaces-btn');
+         const spacesMenu = document.getElementById('spaces-menu');
+         const createFolderBtn = document.getElementById('create-folder-btn');
+         const createSubfolderBtn = document.getElementById('create-subfolder-btn');
+         
+         spacesBtn.addEventListener('click', () => {
+             spacesMenu.classList.toggle('hidden');
+         });
+
+         createFolderBtn.addEventListener('click', () => {
+             showFolderModal('Create Folder');
+         });
+
+         createSubfolderBtn.addEventListener('click', () => {
+             showFolderModal('Create Subfolder');
+         });
+
+         function showFolderModal(title) {
+             alert(`${title} Modal will be shown.`);
+         }
+
+         // Handling dropdown menu visibility
+         const dropdownButton = document.getElementById('dropdownButton');
+         const dropdownMenu = document.getElementById('dropdownMenu');
+         let activeBtn = null;
+
+         function closeAllDropdowns() {
+             if (activeBtn) {
+                 activeBtn.classList.remove('active');
+                 const menu = document.querySelector('.dropdown-menu.show');
+                 if (menu) {
+                     menu.classList.remove('show');
+                 }
+                 activeBtn = null;
+             }
+         }
+
+         dropdownButton.addEventListener('click', () => {
+             if (activeBtn === dropdownButton) {
+                 closeAllDropdowns();
+             } else {
+                 closeAllDropdowns();
+                 dropdownMenu.classList.add('show');
+                 dropdownButton.classList.add('active');
+                 activeBtn = dropdownButton;
+             }
+         });
+
+         document.addEventListener('click', (e) => {
+             if (activeBtn && !activeBtn.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                 closeAllDropdowns();
+             }
+         });
+     });
+ </script>
 
 </html>

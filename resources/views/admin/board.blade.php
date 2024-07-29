@@ -1,354 +1,330 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    @include('admin.css')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EBE Board</title>
-    <link href="https://cdn.jsdelivr.net/npm/flowbite@latest/dist/flowbite.min.css" rel="stylesheet">
+    <title>Kanban Board</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         body {
-            display: flex;
-            margin: 0;
-            padding: 0;
-        }
-        .sidebar {
-            width: 250px;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-        }
-        .header {
-            width: calc(100% - 250px);
-            margin-left: 250px;
-            position: fixed;
-            top: 0;
-            height: 60px;
-            background-color: transparent;
-        }
-        .main-content {
-            display: flex;
-            flex-direction: column;
-            flex: 1;
-            margin-left: 250px;
-            margin-top: 90px;
-            padding: 1rem;
+            font-family: 'Nunito', sans-serif;
         }
         .kanban-board {
+            background-color: #f0f4f8;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .kanban-card {
+            background-color: #fff;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease-in-out;
+        }
+        .kanban-card:hover {
+            transform: translateY(-3px);
+        }
+        .kanban-task {
+            background-color: #fff;
+            border-radius: 0.375rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            padding: 0.75rem;
+            transition: transform 0.2s;
+            cursor: move;
+            position: relative;
+        }
+        .kanban-task:hover {
+            transform: scale(1.02);
+        }
+        .add-task-btn, .add-card-btn {
+            background-color: #1d4ed8;
+            color: #fff;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s;
+        }
+        .add-task-btn:hover, .add-card-btn:hover {
+            background-color: #2563eb;
+        }
+        .kanban-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+        }
+        .color-picker {
+            margin-left: 0.5rem;
+            cursor: pointer;
+        }
+        .task-icons {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
             display: flex;
             gap: 0.5rem;
-            flex-wrap: wrap;
-            overflow-x: auto;
         }
-        .kanban-column {
-            flex: 1 1 200px;
-            max-width: 300px;
-            border-radius: 8px;
-            padding: 1rem;
-            background-color: #f9fafb;
-            min-width: 200px;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            box-sizing: border-box;
-        }
-        .kanban-column h2 {
-            font-size: 1.25rem;
-            margin-bottom: 1rem;
-            font-weight: 600;
-        }
-        .kanban-item {
-            background-color: #ffffff;
-            border-radius: 0.375rem;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        .task-icons button {
+            background: none;
+            border: none;
             cursor: pointer;
-            transition: background-color 0.2s ease;
         }
-        .kanban-item:hover {
-            background-color: #f1f5f9;
+        .task-icons .fa {
+            color: #999;
         }
-        .kanban-column.todo {
-            background-color: #e0e0e0;
+        .task-icons .fa:hover {
+            color: #333;
         }
-        .kanban-column.in-progress {
-            background-color: #fff9c4;
-        }
-        .kanban-column.done {
-            background-color: #c8e6c9;
-        }
-        .new-task-form {
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            inset: 0;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            visibility: hidden;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .modal.show {
+            visibility: visible;
+            opacity: 1;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+        .modal-header {
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 1rem;
             margin-bottom: 1rem;
         }
-        .new-task-input {
-            flex: 1;
-            margin-bottom: 0;
-            padding: 0.5rem;
-            background-color: #f9fafb;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            color: #4b5563;
+        .modal-header h2 {
+            margin: 0;
         }
-        .new-task-button {
-            padding: 0.5rem 1rem;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        .new-task-button:hover {
-            background-color: #0056b3;
-        }
-        .board-creation-form {
+        .modal-footer {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 1rem;
+            margin-top: 1rem;
             display: flex;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+            justify-content: flex-end;
         }
-        .board-creation-input {
-            flex: 1;
-            margin-bottom: 0;
-            padding: 0.5rem;
-            background-color: #f9fafb;
-            border: 1px solid #d1d5db;
-            border-radius: 0.375rem;
-            color: #4b5563;
+        .modal-footer button {
+            margin-left: 0.5rem;
         }
-        .board-creation-button {
-            padding: 0.5rem 1rem;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        .board-creation-button:hover {
-            background-color: #0056b3;
-        }
-        .hidden {
-            display: none;
+        .modal-body {
+            max-height: 300px;
+            overflow-y: auto;
         }
     </style>
 </head>
 <body>
-    @include('admin.css')
-
-    <div
-      class="flex h-screen bg-gray-50 dark:bg-gray-900"
-      :class="{ 'overflow-hidden': isSideMenuOpen }"
-    >
+    <div class="flex h-screen bg-gray-50 dark:bg-gray-900">
         @include('admin.sidebar')
-    </div>
-    <div class="header">
         @include('admin.header')
-    </div>
-    <div class="main-content">
-        <h1 class="text-2xl font-bold mb-4">Board</h1>
-        <div class="board-creation-form">
-            <input type="text" class="board-creation-input" id="board-name" placeholder="New Board Name">
-            <button type="button" class="board-creation-button" id="create-board">Create Board</button>
+        <div class="container mx-auto kanban-board">
+            <div class="kanban-container" id="kanbanContainer">
+                <!-- To Do Card -->
+                <div class="bg-gray-200 p-4 rounded kanban-card" id="card-todo">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold" contenteditable="true">To Do</h3>
+                        <div class="flex gap-2 items-center">
+                            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-todo')"><i class="fas fa-trash-alt"></i></button>
+                            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-todo')"><i id="collapse-todo" class="fas fa-chevron-down"></i></button>
+                            <button class="add-task-btn" onclick="addTask('card-todo')">Add Task</button>
+                        </div>
+                    </div>
+                    <div id="todo" class="space-y-2">
+                        <!-- Tasks will be added here -->
+                    </div>
+                </div>
+                <!-- In Progress Card -->
+                <div class="bg-yellow-200 p-4 rounded kanban-card" id="card-inprogress">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold" contenteditable="true">In Progress</h3>
+                        <div class="flex gap-2 items-center">
+                            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-inprogress')"><i class="fas fa-trash-alt"></i></button>
+                            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-inprogress')"><i id="collapse-inprogress" class="fas fa-chevron-down"></i></button>
+                            <button class="add-task-btn" onclick="addTask('card-inprogress')">Add Task</button>
+                        </div>
+                    </div>
+                    <div id="inprogress" class="space-y-2">
+                        <!-- Tasks will be added here -->
+                    </div>
+                </div>
+                <!-- Done Card -->
+                <div class="bg-green-200 p-4 rounded kanban-card" id="card-done">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="text-lg font-semibold" contenteditable="true">Done</h3>
+                        <div class="flex gap-2 items-center">
+                            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-done')"><i class="fas fa-trash-alt"></i></button>
+                            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-done')"><i id="collapse-done" class="fas fa-chevron-down"></i></button>
+                            <button class="add-task-btn" onclick="addTask('card-done')">Add Task</button>
+                        </div>
+                    </div>
+                    <div id="done" class="space-y-2 task-list">
+                        <!-- Tasks will be added here -->
+                    </div>
+                </div>
+            </div>
+            <button class="add-card-btn" onclick="addCard()">Add Card</button>
         </div>
-        <div class="kanban-board" id="kanban-board">
-            <div class="kanban-column todo" id="todo">
-                <h2>To Do</h2>
-                <form class="new-task-form">
-                    <input type="text" class="new-task-input" placeholder="New Task">
-                    <button type="submit" class="new-task-button">Add</button>
-                </form>
-                <div class="kanban-item" draggable="true">
-                    <div class="font-medium">Task 1</div>
-                </div>
-                <div class="kanban-item" draggable="true">
-                    <div class="font-medium">Task 2</div>
-                </div>
+    </div>
+
+    <!-- Move Task Modal -->
+    <div id="moveTaskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="text-lg font-semibold">Move Task</h2>
             </div>
-            <div class="kanban-column in-progress" id="in-progress">
-                <h2>In Progress</h2>
-                <form class="new-task-form">
-                    <input type="text" class="new-task-input" placeholder="New Task">
-                    <button type="submit" class="new-task-button">Add</button>
-                </form>
-                <div class="kanban-item" draggable="true">
-                    <div class="font-medium">Task 3</div>
-                </div>
-                <div class="kanban-item" draggable="true">
-                    <div class="font-medium">Task 4</div>
-                </div>
+            <div class="modal-body">
+                <label for="moveTaskColumnSelect" class="block text-sm font-medium text-gray-700 mb-2">Select Column:</label>
+                <select id="moveTaskColumnSelect" class="block w-full border-gray-300 rounded-md shadow-sm">
+                    <!-- Options will be populated dynamically -->
+                </select>
             </div>
-            <div class="kanban-column done" id="done">
-                <h2>Done</h2>
-                <form class="new-task-form">
-                    <input type="text" class="new-task-input" placeholder="New Task">
-                    <button type="submit" class="new-task-button">Add</button>
-                </form>
-                <div class="kanban-item" draggable="true">
-                    <div class="font-medium">Task 5</div>
-                </div>
-                <div class="kanban-item" draggable="true">
-                    <div class="font-medium">Task 6</div>
-                </div>
+            <div class="modal-footer">
+                <button id="confirmMoveTaskBtn" class="bg-blue-500 text-white px-4 py-2 rounded">Move</button>
+                <button id="cancelMoveTaskBtn" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
             </div>
         </div>
     </div>
+
     <script>
-        @include('admin.script')
-    </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const draggables = document.querySelectorAll('.kanban-item');
-            const columns = document.querySelectorAll('.kanban-column');
-    
-            function addDragAndDrop() {
-                const draggables = document.querySelectorAll('.kanban-item');
-                const columns = document.querySelectorAll('.kanban-column');
-    
-                draggables.forEach(draggable => {
-                    draggable.addEventListener('dragstart', () => {
-                        draggable.classList.add('dragging');
-                    });
-    
-                    draggable.addEventListener('dragend', () => {
-                        draggable.classList.remove('dragging');
-                    });
-    
-                    draggable.addEventListener('dblclick', () => {
-                        if (!draggable.classList.contains('editable')) {
-                            const input = document.createElement('input');
-                            input.type = 'text';
-                            input.value = draggable.textContent.trim();
-                            draggable.innerHTML = '';
-                            draggable.appendChild(input);
-                            input.focus();
-    
-                            input.addEventListener('blur', () => {
-                                saveTask(draggable, input);
-                            });
-    
-                            input.addEventListener('keydown', (e) => {
-                                if (e.key === 'Enter') {
-                                    saveTask(draggable, input);
-                                }
-                            });
-    
-                            draggable.classList.add('editable');
-                        }
-                    });
-                });
-    
-                columns.forEach(column => {
-                    column.addEventListener('dragover', (e) => {
-                        e.preventDefault();
-                        const afterElement = getDragAfterElement(column, e.clientY);
-                        const draggable = document.querySelector('.dragging');
-                        if (afterElement == null) {
-                            column.appendChild(draggable);
-                        } else {
-                            column.insertBefore(draggable, afterElement);
-                        }
-                    });
-                });
-            }
-    
-            function getDragAfterElement(column, y) {
-                const draggableElements = [...column.querySelectorAll('.kanban-item:not(.dragging)')];
-    
-                return draggableElements.reduce((closest, child) => {
-                    const box = child.getBoundingClientRect();
-                    const offset = y - box.top - box.height / 2;
-                    if (offset < 0 && offset > closest.offset) {
-                        return { offset: offset, element: child };
-                    } else {
-                        return closest;
+        let colorIndex = 0;
+        const cardColors = ['bg-gray-200', 'bg-yellow-200', 'bg-green-200', 'bg-blue-200', 'bg-red-200'];
+        let taskToMove = null;
+        let editingTask = null; // Track the task currently being edited
+
+        function initializeSortables() {
+            const containers = document.querySelectorAll('.kanban-card');
+            containers.forEach(container => {
+                Sortable.create(container.querySelector('div'), {
+                    group: 'tasks',
+                    animation: 150,
+                    onStart: function (evt) {
+                        evt.item.classList.add('dragging');
+                    },
+                    onEnd: function (evt) {
+                        evt.item.classList.remove('dragging');
                     }
-                }, { offset: Number.NEGATIVE_INFINITY }).element;
-            }
-    
-            function saveTask(draggable, input) {
-                const newValue = input.value.trim();
-                if (newValue !== '') {
-                    draggable.innerHTML = `<div class="font-medium">${newValue}</div>`;
-                } else {
-                    draggable.innerHTML = '<div class="font-medium">Untitled Task</div>';
-                }
-                draggable.classList.remove('editable');
-            }
-    
-            function addNewTask(event, column) {
-                event.preventDefault();
-                const input = column.querySelector('.new-task-input');
-                const taskText = input.value.trim();
-                if (taskText !== '') {
-                    const newTask = document.createElement('div');
-                    newTask.classList.add('kanban-item');
-                    newTask.setAttribute('draggable', 'true');
-                    newTask.innerHTML = `<div class="font-medium">${taskText}</div>`;
-                    column.appendChild(newTask);
-                    input.value = '';
-                    addDragAndDrop();
-                }
-            }
-    
-            document.querySelectorAll('.new-task-form').forEach(form => {
-                form.addEventListener('submit', function(event) {
-                    const column = event.target.closest('.kanban-column');
-                    addNewTask(event, column);
                 });
             });
-    
-            addDragAndDrop();
-        });
-    
-        document.getElementById('create-board').addEventListener('click', function() {
-            const boardName = document.getElementById('board-name').value.trim();
-            if (boardName !== '') {
-                const boardContainer = document.createElement('div');
-                boardContainer.classList.add('kanban-column');
-    
-                boardContainer.innerHTML = `
-                    <h2>${boardName}</h2>
-                    <form class="new-task-form">
-                        <input type="text" class="new-task-input" placeholder="New Task">
-                        <button type="submit" class="new-task-button">Add</button>
-                    </form>
-                `;
-    
-                document.getElementById('kanban-board').appendChild(boardContainer);
-    
-                boardContainer.querySelector('.new-task-form').addEventListener('submit', function(event) {
-                    addNewTask(event, boardContainer);
-                });
-    
-                addDragAndDrop();
-                document.getElementById('board-name').value = '';
+        }
+
+        function addTask(cardId) {
+            const taskList = document.getElementById(cardId.replace('card-', ''));
+            const task = document.createElement('div');
+            task.className = 'kanban-task';
+            task.innerHTML = `
+                <div class="task-content" contenteditable="true">New Task</div>
+                <div class="task-icons">
+                    <button onclick="editTask(this)"><i class="fas fa-edit"></i></button>
+                    <button onclick="deleteTask(this)"><i class="fas fa-trash-alt"></i></button>
+                    <button onclick="moveTask(this)"><i class="fas fa-arrows-alt"></i></button>
+                </div>
+            `;
+            taskList.appendChild(task);
+            initializeSortables();
+        }
+
+        function deleteTask(btn) {
+            btn.closest('.kanban-task').remove();
+        }
+
+        function editTask(btn) {
+            const taskContent = btn.closest('.kanban-task').querySelector('.task-content');
+
+            // If there's already an editing task, save the changes
+            if (editingTask && editingTask !== taskContent) {
+                editingTask.contentEditable = 'false';
             }
-        });
-        document.getElementById('dropdownButton').addEventListener('click', function () {
-            const menu = document.getElementById('dropdownMenu');
-            menu.classList.toggle('hidden');
+
+            // Toggle contentEditable state
+            const isEditing = taskContent.isContentEditable;
+            taskContent.contentEditable = !isEditing;
+
+            // If we're starting to edit a task, keep track of it
+            if (!isEditing) {
+                taskContent.focus();
+                editingTask = taskContent;
+            } else {
+                editingTask = null;
+            }
+        }
+
+        function moveTask(btn) {
+            taskToMove = btn.closest('.kanban-task');
+            const columnSelect = document.getElementById('moveTaskColumnSelect');
+            const columns = document.querySelectorAll('.kanban-card');
+            columnSelect.innerHTML = '';
+            columns.forEach(column => {
+                const option = document.createElement('option');
+                option.value = column.id;
+                option.textContent = column.querySelector('h3').textContent;
+                columnSelect.appendChild(option);
+            });
+            document.getElementById('moveTaskModal').classList.add('show');
+        }
+
+        document.getElementById('confirmMoveTaskBtn').addEventListener('click', () => {
+            const columnId = document.getElementById('moveTaskColumnSelect').value;
+            if (taskToMove && columnId) {
+                document.getElementById(columnId.replace('card-', '')).appendChild(taskToMove);
+                document.getElementById('moveTaskModal').classList.remove('show');
+            }
         });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function (event) {
-            const button = document.getElementById('dropdownButton');
-            const menu = document.getElementById('dropdownMenu');
-            if (!button.contains(event.target) && !menu.contains(event.target)) {
-                menu.classList.add('hidden');
-            }
+        document.getElementById('cancelMoveTaskBtn').addEventListener('click', () => {
+            document.getElementById('moveTaskModal').classList.remove('show');
         });
-        dropdownButton.addEventListener('click', function () {
-    if (activeBtn === dropdownButton) {
-        closeAllDropdowns();
-    } else {
-        closeAllDropdowns();
-        dropdownMenu.classList.add('show');
-        dropdownButton.classList.add('active');
-        activeBtn = dropdownButton;
-    }
-});
+
+        function addCard() {
+            colorIndex++;
+            const cardId = `card-${colorIndex}`;
+            const newCard = document.createElement('div');
+            newCard.className = `p-4 rounded kanban-card ${cardColors[colorIndex % cardColors.length]}`;
+            newCard.id = cardId;
+            newCard.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-semibold" contenteditable="true">New Column</h3>
+                    <div class="flex gap-2 items-center">
+                        <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('${cardId}')"><i class="fas fa-trash-alt"></i></button>
+                        <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('${cardId}')"><i id="collapse-${cardId}" class="fas fa-chevron-down"></i></button>
+                        <button class="add-task-btn" onclick="addTask('${cardId}')">Add Task</button>
+                    </div>
+                </div>
+                <div id="${cardId.replace('card-', '')}" class="space-y-2">
+                    <!-- Tasks will be added here -->
+                </div>
+            `;
+            document.getElementById('kanbanContainer').appendChild(newCard);
+            initializeSortables();
+        }
+
+        function deleteCard(cardId) {
+            document.getElementById(cardId).remove();
+        }
+
+        function toggleCard(cardId) {
+            const card = document.getElementById(cardId);
+            const tasks = card.querySelector('div[id]');
+            tasks.classList.toggle('hidden');
+            const icon = document.getElementById(`collapse-${cardId}`);
+            icon.classList.toggle('fa-chevron-down');
+            icon.classList.toggle('fa-chevron-up');
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeSortables();
+        });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/flowbite@latest/dist/flowbite.min.js"></script>
 </body>
 </html>

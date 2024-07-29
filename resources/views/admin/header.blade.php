@@ -198,8 +198,8 @@
                             </button>
                         </div>
 
-                        <form action="{{ route('issue.store') }}" method="POST" enctype="multipart/form-data"
-                            class="mt-4">
+                        <form id="issueForm" action="{{ route('issue.store') }}" method="POST" enctype="multipart/form-data" class="mt-4">
+
                             @csrf
                             <!-- Project Dropdown -->
                             <div class="mb-4">
@@ -266,10 +266,10 @@
                                     class="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500">
                                     Cancel
                                 </button>
-                                <button type="submit"
-                                    class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
-                                    Create
-                                </button>
+                                    <button type="submit"
+                                        class="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                                        Create
+                                    </button>
                                 <div id="loading"
                                     class="fixed inset-0 flex items-center justify-center bg-white bg-opacity-75 z-50 hidden">
                                     <li class="flex items-center">
@@ -395,6 +395,37 @@
                 window.location.href = "{{ route('admin.userstory') }}";
             }, 500); // Adjust the delay as needed
         });
+    });
+    document.getElementById('issueForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent the default form submission
+
+        // Show the loading indicator
+        document.getElementById('loading').classList.remove('hidden');
+
+        // Create a FormData object to handle file uploads
+        var formData = new FormData(this);
+
+        // Send the form data using fetch API
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        }).then(response => response.json())
+          .then(data => {
+              // Hide the loading indicator
+              document.getElementById('loading').classList.add('hidden');
+
+              // Redirect to the desired route
+              window.location.href = '{{ route("admin.userstory") }}';
+          }).catch(error => {
+              // Handle errors
+              console.error('Error:', error);
+              // Hide the loading indicator
+              document.getElementById('loading').classList.add('hidden');
+          });
     });
         @include('admin.script')
     </script>

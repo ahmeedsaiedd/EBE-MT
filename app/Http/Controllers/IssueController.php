@@ -26,9 +26,42 @@ class IssueController extends Controller
 
     public function store(Request $request)
     {
+        
         $this->issueService->storeNewIssue($request);
-        return redirect('/')->with('success', 'issue created successfully.');
+        // Validate the request
+    $request->validate([
+        'project_id' => 'required|exists:projects,id',
+        'status_id' => 'required|exists:statuses,id',
+        'summary' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'attachments' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+        'assignee' => 'nullable|exists:users,id',
+    ]);
+
+    // Store the issue
+    $issue = new Issue();
+    $issue->project_id = $request->input('project_id');
+    $issue->status_id = $request->input('status_id');
+    $issue->summary = $request->input('summary');
+    $issue->description = $request->input('description');
+    $issue->assignee = $request->input('assignee');
+
+    if ($request->hasFile('attachments')) {
+        $file = $request->file('attachments');
+        $path = $file->store('attachments', 'public');
+        $issue->attachments = $path;
     }
+
+    $issue->save();
+
+    // Redirect to the specified route after storing data
+    return redirect()->route('admin.userstory')->with('success', 'Issue created successfully!');
+    
+}
+
+
+    
+
 
     public function edit($id)
     {

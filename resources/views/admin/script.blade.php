@@ -18,6 +18,7 @@
                 return this.openModalId === id;
             },
         }));
+        
     });
     document.addEventListener('DOMContentLoaded', function () {
           const createProjectBtn = document.getElementById('create-project-btn');
@@ -244,6 +245,11 @@
         dropdownButton.classList.add('active');
         activeBtn = dropdownButton;
     }
+    import Alpine from 'alpinejs';
+window.Alpine = Alpine;
+Alpine.start();
+
 });
+
 
 </script>
