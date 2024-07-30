@@ -1,9 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+<html lang="en" x-data="{ dark: false, isSideMenuOpen: false, showTable: false }" :class="{ 'theme-dark': dark }">
+
 
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     @include('admin.css')
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -149,6 +153,19 @@
             max-height: 300px;
             overflow-y: auto;
         }
+        .add-card-btn {
+    margin-top: 1rem;
+    padding-top: 0.5rem;
+    padding-right: 1rem;
+    padding-bottom: 0.5rem;
+    padding-left: 1rem;
+    background-color: #3490dc; /* Example color */
+    color: white;
+    border-radius: 0.375rem;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
     </style>
 </head>
 
@@ -158,73 +175,54 @@
         @include('admin.header')
         <div class="container mx-auto kanban-board">
             <div class="kanban-container" id="kanbanContainer">
-               <!-- To Do Card -->
-<div class="bg-gray-200 p-4 rounded kanban-card" id="card-todo">
-    <div class="flex justify-between items-center mb-4">
-        <h3 class="text-lg font-semibold" contenteditable="true">To Do</h3>
-        <div class="flex gap-2 items-center">
-            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-todo')">
-                <i class="fas fa-trash-alt"></i>
-            </button>
-            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-todo')">
-                <i id="collapse-todo" class="fas fa-chevron-down"></i>
-            </button>
-            <button class="add-task-btn" onclick="addTask('card-todo')">Add Task</button>
-        </div>
-    </div>
-    <div id="todo" class="space-y-2">
-        @foreach($tasks as $task)
-        <div class="kanban-task" data-task-id="{{ $task->id }}">
-            <form action="{{ route('kanban.updateTask', $task->id) }}" method="POST" class="task-form">
-                @csrf
-                @method('PUT')
-                <input type="text" name="name" class="task-content" value="{{ $task->name }}" />
-                <div class="task-icons">
-                    <button type="button" onclick="editTask(this)"><i class="fas fa-edit"></i></button>
-                    <button type="button" onclick="deleteTask(this)"><i class="fas fa-trash-alt"></i></button>
-                    <button type="button" onclick="moveTask(this)"><i class="fas fa-arrows-alt"></i></button>
-                </div>
-            </form>
-        </div>
-        @endforeach
-    </div>
-    
-</div>
 
-                <!-- In Progress Card -->
-                <div class="bg-yellow-200 p-4 rounded kanban-card" id="card-inprogress">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold" contenteditable="true">In Progress</h3>
-                        <div class="flex gap-2 items-center">
-                            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-inprogress')"><i
-                                    class="fas fa-trash-alt"></i></button>
-                            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-inprogress')"><i
-                                    id="collapse-inprogress" class="fas fa-chevron-down"></i></button>
-                            <button class="add-task-btn" onclick="addTask('card-inprogress')">Add Task</button>
+
+                @foreach ($cards as $card)
+                    <!-- To Do Card -->
+                    <div class="bg-gray-200 p-4 rounded kanban-card" id="card-todo">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-lg font-semibold" contenteditable="true">{{ $card->name }}</h3>
+                            <div class="flex gap-2 items-center">
+                                <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('{{ $card->id }}')">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                
+                                <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard($card->id)">
+                                    <i id="collapse-todo" class="fas fa-chevron-down"></i>
+                                </button>
+                                <button class="add-task-btn" onclick="addTask('{{ $card->id }}')">Add Task</button>
+                            </div>
                         </div>
-                    </div>
-                    <div id="inprogress" class="space-y-2">
-                        <!-- Tasks will be added here -->
-                    </div>
-                </div>
-                <!-- Done Card -->
-                <div class="bg-green-200 p-4 rounded kanban-card" id="card-done">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-semibold" contenteditable="true">Done</h3>
-                        <div class="flex gap-2 items-center">
-                            <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('card-done')"><i
-                                    class="fas fa-trash-alt"></i></button>
-                            <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('card-done')"><i
-                                    id="collapse-done" class="fas fa-chevron-down"></i></button>
-                            <button class="add-task-btn" onclick="addTask('card-done')">Add Task</button>
+                        <div id="tasks-{{ $card->id }}" class="space-y-2">
+                            @foreach ($tasks as $task)
+                                @if ($card->id == $task->card_id)
+                                    <div class="kanban-task" data-task-id="{{ $task->id }}">
+                                        <form action="{{ route('kanban.updateTask', $task->id) }}" method="POST"
+                                            class="task-form">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="text" name="name" class="task-content"
+                                                value="{{ $task->name }}" />
+                                            <div class="task-icons">
+                                                <button type="button" onclick="editTask(this)"><i
+                                                        class="fas fa-edit"></i></button>
+                                                <button type="button" onclick="deleteTask(this)"><i
+                                                        class="fas fa-trash-alt"></i></button>
+                                                <button type="button" onclick="moveTask(this)"><i
+                                                        class="fas fa-arrows-alt"></i></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                @endif
+                            @endforeach
+
                         </div>
+
                     </div>
-                    <div id="done" class="space-y-2 task-list">
-                        <!-- Tasks will be added here -->
-                    </div>
-                </div>
+                @endforeach
+
             </div>
-            <button class="add-card-btn" onclick="addCard()">Add Card</button>
+            <button class="add-card-btn" onclick="addCard()" >Add new board</button>
         </div>
     </div>
 
@@ -248,6 +246,7 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         let colorIndex = 0;
         const cardColors = ['bg-gray-200', 'bg-yellow-200', 'bg-green-200', 'bg-blue-200', 'bg-red-200'];
@@ -271,17 +270,24 @@
         }
 
         function addTask(cardId) {
-    const taskList = document.getElementById(cardId.replace('card-', ''));
-    const task = document.createElement('div');
-    task.className = 'kanban-task';
+            // Make sure cardId is used correctly
+            const taskList = document.getElementById(`tasks-${cardId}`);
 
-    // Construct the form action URL
-    const formActionUrl = `/kanban/cards/1/tasks`;
+            if (!taskList) {
+                console.error(`No element found with id tasks-${cardId}`);
+                return;
+            }
 
-    task.innerHTML = `
+            const task = document.createElement('div');
+            task.className = 'kanban-task';
+
+            // Construct the form action URL
+            const formActionUrl = `/kanban/cards/${cardId}/tasks`;
+
+            task.innerHTML = `
         <form action="${formActionUrl}" method="POST" class="task-form">
             <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').getAttribute('content')}" />
-            <input type="hidden" name="card_id" value="1" />
+            <input type="hidden" name="card_id" value="${cardId}" />
             <input type="text" name="name" class="task-content" value="New Task" />
             <div class="task-icons">
                 <button type="button" onclick="editTask(this)"><i class="fas fa-edit"></i></button>
@@ -291,103 +297,107 @@
         </form>
     `;
 
-    taskList.appendChild(task);
+            taskList.appendChild(task);
 
-    // Add event listener to submit form on blur
-    task.querySelector('.task-content').addEventListener('blur', function() {
-        this.closest('form').submit();
-    });
+            // Add event listener to submit form on blur
+            task.querySelector('.task-content').addEventListener('blur', function() {
+                this.closest('form').submit();
+            });
 
-    // Initialize sortables again to include the new task
-    initializeSortables();
-}
-
-
+            // Initialize sortables again to include the new task
+            initializeSortables();
+        }
 
 
-function deleteTask(btn) {
-    const taskId = btn.closest('.kanban-task').dataset.taskId;
-
-    if (confirm('Are you sure you want to delete this task?')) {
-        fetch(`/kanban/tasks/${taskId}`, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Content-Type': 'application/json',
-            }
-        }).then(response => {
-            if (response.ok) {
-                btn.closest('.kanban-task').remove();
-            } else {
-                alert('Failed to delete the task.');
-            }
-        }).catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while deleting the task.');
-        });
-    }
-}
 
 
-        function editTask(btn) {
-            const taskContent = btn.closest('.kanban-task').querySelector('.task-content');
 
-            // If there's already an editing task, save the changes
-            if (editingTask && editingTask !== taskContent) {
-                editingTask.contentEditable = 'false';
-            }
+        function showToast(message, type = 'success') {
+            Swal.fire({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                icon: type,
+                title: message
+            });
+        }
 
-            // Toggle contentEditable state
-            const isEditing = taskContent.isContentEditable;
-            taskContent.contentEditable = !isEditing;
+        function deleteTask(btn) {
+            const taskId = btn.closest('.kanban-task').dataset.taskId;
 
-            // If we're starting to edit a task, keep track of it
-            if (!isEditing) {
-                taskContent.focus();
-                editingTask = taskContent;
-            } else {
-                editingTask = null;
-            }
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    fetch(`/kanban/tasks/${taskId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                                'content'),
+                            'Content-Type': 'application/json',
+                        }
+                    }).then(response => {
+                        if (response.ok) {
+                            showToast('Task deleted successfully.');
+                            btn.closest('.kanban-task').remove();
+                        } else {
+                            showToast('Failed to delete the task.', 'error');
+                        }
+                    }).catch(error => {
+                        console.error('Error:', error);
+                        showToast('An error occurred while deleting the task.', 'error');
+                    });
+                }
+            });
         }
 
         function moveTask(btn) {
-    taskToMove = btn.closest('.kanban-task');
-    const columnSelect = document.getElementById('moveTaskColumnSelect');
-    const columns = document.querySelectorAll('.kanban-card');
-    columnSelect.innerHTML = '';
-    columns.forEach(column => {
-        const option = document.createElement('option');
-        option.value = column.id;
-        option.textContent = column.querySelector('h3').textContent;
-        columnSelect.appendChild(option);
-    });
-    document.getElementById('moveTaskModal').classList.add('show');
-}
+            taskToMove = btn.closest('.kanban-task');
+            const columnSelect = document.getElementById('moveTaskColumnSelect');
+            const columns = document.querySelectorAll('.kanban-card');
+            columnSelect.innerHTML = '';
+            columns.forEach(column => {
+                const option = document.createElement('option');
+                option.value = column.id;
+                option.textContent = column.querySelector('h3').textContent;
+                columnSelect.appendChild(option);
+            });
+            document.getElementById('moveTaskModal').classList.add('show');
+        }
 
-document.getElementById('confirmMoveTaskBtn').addEventListener('click', () => {
-    const columnId = document.getElementById('moveTaskColumnSelect').value;
-    if (taskToMove && columnId) {
-        document.getElementById(columnId.replace('card-', '')).appendChild(taskToMove);
-        document.getElementById('moveTaskModal').classList.remove('show');
+        document.getElementById('confirmMoveTaskBtn').addEventListener('click', () => {
+            const columnId = document.getElementById('moveTaskColumnSelect').value;
+            if (taskToMove && columnId) {
+                document.getElementById(columnId.replace('card-', '')).appendChild(taskToMove);
+                document.getElementById('moveTaskModal').classList.remove('show');
 
-        fetch(`/kanban/tasks/${taskToMove.dataset.taskId}/move`, {
-            method: 'PUT',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ card_id: columnId.replace('card-', '') })
-        }).then(response => {
-            if (!response.ok) {
-                alert('Failed to update task.');
+                fetch(`/kanban/tasks/${taskToMove.dataset.taskId}/move`, {
+                    method: 'PUT',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content'),
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        card_id: columnId.replace('card-', '')
+                    })
+                }).then(response => {
+                    if (!response.ok) {
+                        showToast('Failed to update task.', 'error');
+                    }
+                }).catch(error => {
+                    console.error('Error:', error);
+                    showToast('An error occurred while updating the task.', 'error');
+                });
             }
-        }).catch(error => {
-            console.error('Error:', error);
-            alert('An error occurred while updating the task.');
         });
-    }
-});
-
 
         function addCard() {
             colorIndex++;
@@ -396,25 +406,91 @@ document.getElementById('confirmMoveTaskBtn').addEventListener('click', () => {
             newCard.className = `p-4 rounded kanban-card ${cardColors[colorIndex % cardColors.length]}`;
             newCard.id = cardId;
             newCard.innerHTML = `
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-semibold" contenteditable="true">New Column</h3>
-                    <div class="flex gap-2 items-center">
-                        <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('${cardId}')"><i class="fas fa-trash-alt"></i></button>
-                        <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('${cardId}')"><i id="collapse-${cardId}" class="fas fa-chevron-down"></i></button>
-                        <button class="add-task-btn" onclick="addTask('${cardId}')">Add Task</button>
-                    </div>
-                </div>
-                <div id="${cardId.replace('card-', '')}" class="space-y-2">
-                    <!-- Tasks will be added here -->
-                </div>
-            `;
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-semibold" contenteditable="true">New Column</h3>
+            <div class="flex gap-2 items-center">
+                <button class="text-gray-500 hover:text-gray-700" onclick="deleteCard('${cardId}')"><i class="fas fa-trash-alt"></i></button>
+                <button class="text-gray-500 hover:text-gray-700" onclick="toggleCard('${cardId}')"><i id="collapse-${cardId}" class="fas fa-chevron-down"></i></button>
+                <button class="add-task-btn" onclick="addTask('${cardId}')">Add Task</button>
+            </div>
+        </div>
+        <div id="${cardId.replace('card-', '')}" class="space-y-2">
+            <!-- Tasks will be added here -->
+        </div>
+    `;
             document.getElementById('kanbanContainer').appendChild(newCard);
             initializeSortables();
+            showToast('Card added successfully.');
+
+            // Send card data to the server
+            fetch('{{ route('kanban.storeCard') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({
+                        board_id: "1",
+                        name: 'New Column',
+                        color: cardColors[colorIndex % cardColors.length]
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        console.error('Error saving card:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         }
 
+
         function deleteCard(cardId) {
-            document.getElementById(cardId).remove();
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This card and all tasks will be deleted!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            fetch(`/kanban/cards/${cardId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const cardElement = document.getElementById(cardId);
+                    if (cardElement) {
+                        cardElement.remove();
+                        showToast('Card deleted successfully.');
+                    } else {
+                        showToast('Failed to delete card: Card not found.');
+                    }
+                } else {
+                    showToast(`Failed to delete card: ${data.message}`);
+                }
+            })
+            .catch(error => {
+                showToast('An error occurred while deleting the card.');
+                console.error('Error:', error);
+            });
         }
+    });
+}
+
+
+
+
+
 
         function toggleCard(cardId) {
             const card = document.getElementById(cardId);

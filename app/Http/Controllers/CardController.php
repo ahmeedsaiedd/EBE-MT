@@ -10,6 +10,7 @@ class CardController extends Controller
 {
     public function store(Request $request)
     {
+        dd($request);
         $card = Card::create($request->all());
         return response()->json($card, 201);
     }
@@ -23,7 +24,7 @@ class CardController extends Controller
     public function destroy(Card $card)
     {
         $card->delete();
-        return response()->json(null, 204);
+        // return response()->json(null, 204);
     }
 }
 

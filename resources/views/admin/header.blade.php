@@ -1,6 +1,8 @@
 <!-- Backdrop -->
 
 <head>
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
     <meta charset="UTF-8">
@@ -184,16 +186,14 @@
 
                 </div>
             </div>
-            <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden">
-                <div class="relative top-20 mx-auto p-6 w-full max-w-lg">
-                    <div class="bg-white shadow-lg rounded-md p-6">
+            <div id="modal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto  w-full hidden">
+                <div class="relative mx-auto p-4 w-full max-w-md">
+                    <div class="bg-white shadow-lg rounded-md p-4 max-h-[100vh] overflow-auto">
                         <div class="flex items-center justify-between">
-                            <h3 class="text-xl font-semibold text-gray-900">Create Issue</h3>
+                            <h3 class="text-lg font-semibold text-gray-900">Create Issue</h3>
                             <button id="closeModalButton" class="text-gray-600 hover:text-gray-900">
-                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M6 18L18 6M6 6l12 12"></path>
+                                <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                                 </svg>
                             </button>
                         </div>

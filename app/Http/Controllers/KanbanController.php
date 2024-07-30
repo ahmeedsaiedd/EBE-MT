@@ -26,7 +26,7 @@ class KanbanController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
-        $card = Card::create($request->only('name'));
+        $card = Card::create($request->all());
         return response()->json($card);
     }
 

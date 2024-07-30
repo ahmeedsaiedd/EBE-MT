@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
 <html lang="en" x-data="{ dark: false, isSideMenuOpen: false }" :class="{ 'theme-dark': dark }">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -42,15 +44,19 @@
             overflow: hidden;
         }
         .popover {
-            display: none; /* Hide by default */
-            position: absolute;
-            z-index: 10;
-            background-color: white;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            padding: 10px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-        }
+    display: none; /* Hide by default */
+    position: absolute;
+    top: 0%; /* Position below the button */
+    left: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    min-width: 200px; /* Ensure dropdown has a minimum width */
+    z-index: 10; /* Ensure it is on top of other content */
+}
+
 
         /* Show popover */
         .popover.show {
@@ -236,7 +242,8 @@
                 <!-- Popovers -->
                 <div id="stepsPopover" class="popover absolute z-10 bg-white border border-gray-200 rounded-lg shadow-lg p-4">
                     <ul class="space-y-2">
-                        <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Add Steps</a></li>
+                        <li><a href="#" id="addStepsBtn" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Add Steps</a></li>
+                        
                         <li><a href="#" class="block px-4 py-2 text-gray-700 hover:bg-gray-100 rounded">Call Steps</a></li>
                     </ul>
                 </div>
@@ -247,12 +254,9 @@
                     </ul>
                 </div>
 
-                <!-- Table -->
-                {{-- <form id="form" method="POST" action="/save-data"> <!-- Adjust the action URL accordingly --> --}}
-                  <form action="{{ route('issue.store') }}" method="POST" enctype="multipart/form-data"
-                            class="mt-4">
+                <form id="form" action="{{ route('issue.store') }}" method="POST" enctype="multipart/form-data" class="mt-4">
                     @csrf
-                    <div class="overflow-x-auto">
+                    <div id="stepsTable" class="overflow-x-auto hidden">
                         <table class="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
                             <thead class="bg-gray-100 border-b border-gray-200">
                                 <tr>
@@ -289,8 +293,6 @@
                         </button>
                     </div>
                 </form>
-            </div>
-        </div>
 
         <!-- Modal -->
         <div id="modal" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
@@ -344,77 +346,76 @@
 </script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Toggle loader visibility
-            function toggleLoader(show) {
-                document.getElementById('loader').classList.toggle('hidden', !show);
-                document.body.classList.toggle('loader-active', show);
-            }
+    // Toggle loader visibility
+    function toggleLoader(show) {
+        document.getElementById('loader').classList.toggle('hidden', !show);
+        document.body.classList.toggle('loader-active', show);
+    }
 
-            // Show loader when the page is loading
-            toggleLoader(true);
+    // Show loader when the page is loading
+    toggleLoader(true);
 
-            // Hide loader after content has loaded
-            window.addEventListener('load', function () {
-                toggleLoader(false);
-                document.getElementById('content').classList.remove('hidden');
-            });
+    // Hide loader after content has loaded
+    window.addEventListener('load', function () {
+        toggleLoader(false);
+        document.getElementById('content').classList.remove('hidden');
+    });
 
-            // Handle steps button click
-            document.getElementById('stepsBtn').addEventListener('click', function () {
-                document.getElementById('stepsPopover').classList.toggle('show');
-            });
+    // Handle steps button click
+    document.getElementById('stepsBtn').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default action
+        const popover = document.getElementById('stepsPopover');
+        popover.classList.toggle('show');
+        // Position popover directly below the button
+        const rect = this.getBoundingClientRect();
+        popover.style.top = `${rect.bottom}px`;
+        popover.style.left = `${rect.left}px`;
+    });
 
-            // Handle pre-condition button click
-            document.getElementById('preconditionBtn').addEventListener('click', function () {
-                document.getElementById('preconditionPopover').classList.toggle('show');
-            });
+    // Handle pre-condition button click
+    document.getElementById('preconditionBtn').addEventListener('click', function (event) {
+        event.preventDefault(); // Prevent default action
+        const popover = document.getElementById('preconditionPopover');
+        popover.classList.toggle('show');
+        // Position popover directly below the button
+        const rect = this.getBoundingClientRect();
+        popover.style.top = `${rect.bottom}px`;
+        popover.style.left = `${rect.left}px`;
+    });
 
-            // Handle add row button click
-            document.getElementById('addRowBtn').addEventListener('click', function (e) {
-                e.preventDefault();
-                const tableBody = document.querySelector('tbody');
-                const newRow = document.createElement('tr');
-                newRow.innerHTML = `
-                    <td class="py-4 px-4 border-b border-gray-200">
-                        <textarea name="test_step[]" class="w-full p-2 border border-gray-300 rounded-lg resize-none" rows="2" placeholder="Describe the action..."></textarea>
-                    </td>
-                    <td class="py-4 px-4 border-b border-gray-200">
-                        <textarea name="test_data[]" class="w-full p-2 border border-gray-300 rounded-lg resize-none" rows="2" placeholder="Enter the data..."></textarea>
-                    </td>
-                    <td class="py-4 px-4 border-b border-gray-200">
-                        <textarea name="expected_result[]" class="w-full p-2 border border-gray-300 rounded-lg resize-none" rows="2" placeholder="Describe the expected outcome..."></textarea>
-                    </td>
-                `;
-                tableBody.appendChild(newRow);
-            });
+    // Handle add row button click
+    document.getElementById('addRowBtn').addEventListener('click', function (e) {
+        e.preventDefault();
+        const tableBody = document.querySelector('tbody');
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td class="py-4 px-4 border-b border-gray-200">
+                <textarea name="test_step[]" class="w-full p-2 border border-gray-300 rounded-lg resize-none" rows="2" placeholder="Describe the action..."></textarea>
+            </td>
+            <td class="py-4 px-4 border-b border-gray-200">
+                <textarea name="test_data[]" class="w-full p-2 border border-gray-300 rounded-lg resize-none" rows="2" placeholder="Enter the data..."></textarea>
+            </td>
+            <td class="py-4 px-4 border-b border-gray-200">
+                <textarea name="expected_result[]" class="w-full p-2 border border-gray-300 rounded-lg resize-none" rows="2" placeholder="Describe the expected outcome..."></textarea>
+            </td>
+        `;
+        tableBody.appendChild(newRow);
+    });
 
-            // Handle modal open/close
-            document.querySelectorAll('[data-modal-target]').forEach(button => {
-                button.addEventListener('click', function () {
-                    document.getElementById(this.dataset.modalTarget).classList.remove('hidden');
-                });
-            });
-
-            document.querySelectorAll('[data-modal-close]').forEach(button => {
-                button.addEventListener('click', function () {
-                    this.closest('.modal').classList.add('hidden');
-                });
-            });
-            document.getElementById('dropdownButton').addEventListener('click', function () {
-            const menu = document.getElementById('dropdownMenu');
-            menu.classList.toggle('hidden');
+    // Handle modal open/close
+    document.querySelectorAll('[data-modal-target]').forEach(button => {
+        button.addEventListener('click', function () {
+            document.getElementById(this.dataset.modalTarget).classList.remove('hidden');
         });
+    });
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function (event) {
-            const button = document.getElementById('dropdownButton');
-            const menu = document.getElementById('dropdownMenu');
-            if (!button.contains(event.target) && !menu.contains(event.target)) {
-                menu.classList.add('hidden');
-            }
+    document.querySelectorAll('[data-modal-close]').forEach(button => {
+        button.addEventListener('click', function () {
+            this.closest('.modal').classList.add('hidden');
         });
-        
-        document.getElementById('openModalButton').addEventListener('click', function() {
+    });
+
+    document.getElementById('openModalButton').addEventListener('click', function() {
         document.getElementById('modal').classList.remove('hidden');
     });
 
@@ -423,8 +424,43 @@
             document.getElementById('modal').classList.add('hidden');
         });
     });
-    
-        });
+    document.getElementById('addStepsBtn').addEventListener('click', function() {
+        var table = document.getElementById('stepsTable');
+        if (table.classList.contains('hidden')) {
+            table.classList.remove('hidden');
+        } else {
+            table.classList.add('hidden');
+        }
+    });
+    document.addEventListener('DOMContentLoaded', function () {
+    const addStepsBtn = document.getElementById('addStepsBtn');
+    const popover = document.querySelector('.popover');
+
+    // Show the popover
+    addStepsBtn.addEventListener('click', function () {
+      popover.style.display = 'block';
+    });
+
+    // Hide the popover when clicking outside
+    document.addEventListener('click', function (event) {
+      if (!popover.contains(event.target) && event.target !== addStepsBtn) {
+        popover.style.display = 'none';
+      }
+    });
+
+    // Hide the popover when an option is selected
+    document.querySelectorAll('.popover-option').forEach(function (option) {
+      option.addEventListener('click', function () {
+        // Perform the action associated with the option
+        console.log('Option selected:', option.textContent);
+
+        // Hide the popover
+        popover.style.display = 'none';
+      });
+    });
+  });
+});
+
     </script>
 </body>
 </html>

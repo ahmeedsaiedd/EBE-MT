@@ -29,6 +29,7 @@ function data() {
     closeSideMenu() {
       this.isSideMenuOpen = false
     },
+    
     isNotificationsMenuOpen: false,
     toggleNotificationsMenu() {
       this.isNotificationsMenuOpen = !this.isNotificationsMenuOpen
