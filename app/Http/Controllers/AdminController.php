@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Card;
 use App\Models\Task;
+use App\Models\Project;
+use App\Models\User;
 use App\Services\{ProjectService, UsersService, StatusService};
 use Illuminate\Http\Request;
+
 
 
 class AdminController extends Controller
@@ -65,5 +68,16 @@ class AdminController extends Controller
     public function userstory(Request $request)
     {
         dd("sdfsdfsd");
+    }
+
+    public function projects()
+    {
+        $projects = Project::all(); // Retrieve projects or any other data needed
+        $users = $this->usersService->getAllUsers();
+        $projects = $this->projectSerivce->getAllProjetcs();
+        $statuses = $this->statusService->getAllStatuses();
+        return view('admin.projects', compact('projects','users' , 'statuses')); // Return the view with the data
+
+        // return view('admin.calender', compact('projects', 'users' , 'statuses'));
     }
 }

@@ -1,13 +1,16 @@
 <head>
-   
+
 </head>
 
 <body>
     <aside class="z-20 hidden w-64 overflow-y-auto bg-white dark:bg-gray-800 md:block flex-shrink-0">
         <div class="py-4 text-gray-500 dark:text-gray-400">
-            <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200" href="#">
+            <a class="ml-6 text-lg font-bold text-gray-800 dark:text-gray-200 flex items-center" href="#">
+                <img src="{{ asset('favicon.ico') }}" alt="EBE Logo" class="w-7 h-7 mr-2">
+
                 EBE-MT
             </a>
+            
 
             <ul class="mt-6">
                 <li class="relative px-6 py-3">
@@ -71,8 +74,8 @@
 
 
                 <!-- Other list items... -->
-                {{-- <li class="relative px-6 py-3">
-                    <button id="dropdown-btn"
+                <li class="relative px-6 py-3">
+                    <a href="{{ route('admin.projects') }}"
                         class="btn-toggle inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 focus:outline-none">
                         <svg class="w-5 h-5" aria-hidden="true" fill="none" stroke-linecap="round"
                             stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor">
@@ -81,36 +84,7 @@
                             </path>
                         </svg>
                         <span class="ml-4">My Project</span>
-                    </button>
-                    <div id="dropdownMenu"
-                    class="absolute mt-2 bg-white shadow-lg rounded-md w-48 max-h-60 overflow-y-auto z-10 hidden">
-                    <ul class="py-1 text-sm text-gray-700 dark:text-gray-200">
-                        @forelse($projects->take(5) as $project)
-                            <li>
-                                <a href="#"
-                                    class="project-option block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                                    data-project="{{ $project->id }}">
-                                    {{ $project->name }}
-                                </a>
-                            </li>
-                        @empty
-                            <li>
-                                <span class="block px-4 py-2 text-sm text-gray-700">
-                                    No projects available
-                                </span>
-                            </li>
-                        @endforelse
-                    </ul>
-                    
-                    @if ($projects->count() > 5)
-                        <div class="px-4 py-2">
-                            <a href="{{ route('admin.projects') }}"
-                               class="text-blue-500 hover:underline text-sm">
-                               See More
-                            </a>
-                        </div>
-                    @endif
-                </div> --}}
+                    </a>
 
 
                 </li>
@@ -178,7 +152,8 @@
                             x-transition:leave-start="opacity-100 max-h-xl" x-transition:leave-end="opacity-0 max-h-0"
                             class="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-500 rounded-md shadow-inner bg-gray-50 dark:bg-gray-900"
                             aria-label="submenu">
-                            <li class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
+                            <li
+                                class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                                 <a class="flex items-center w-full" href="{{ url('Issue') }}">
                                     <span aria-hidden="true" class="css-snhnyn"
                                         style="--icon-primary-color: currentColor; --icon-secondary-color: var(--ds-surface, #FFFFFF);">
@@ -196,11 +171,11 @@
                                     Issue
                                 </a>
                             </li>
-                            
+
                             <li
                                 class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                                 {{-- <a class="flex items-center w-full" href="{{ 'view_board' }}"> --}}
-                                    <a class="flex items-center w-full" href="{{ 'Board' }}">
+                                <a class="flex items-center w-full" href="{{ 'Board' }}">
                                     <svg width="24" height="24" viewBox="0 0 24 24" role="presentation">
                                         <g fill="currentColor">
                                             <path
@@ -231,26 +206,27 @@
                                 <a class="flex items-center w-full" href="pages/404.html">
                                     <span aria-hidden="true" class="css-snhnyn"
                                         style="--icon-primary-color: currentColor; --icon-secondary-color: var(--ds-surface, #FFFFFF);">
+                                        <!-- Updated SVG Icon -->
                                         <svg width="24" height="24" viewBox="0 0 24 24" role="presentation">
-                                            <g fill="currentColor" fill-rule="evenodd">
-                                                <rect x="10" y="15" width="8" height="2" rx="1">
-                                                </rect>
-                                                <rect x="6" y="15" width="2" height="2" rx="1">
-                                                </rect>
-                                                <rect x="10" y="11" width="8" height="2" rx="1">
-                                                </rect>
-                                                <rect x="6" y="11" width="2" height="2" rx="1">
-                                                </rect>
-                                                <rect x="10" y="7" width="8" height="2" rx="1">
-                                                </rect>
-                                                <rect x="6" y="7" width="2" height="2" rx="1">
-                                                </rect>
+                                            <g fill="currentColor">
+                                                <path
+                                                    d="M5 19.002C5 19 17 19 17 19v-2.002C17 17 5 17 5 17zm-2-2.004C3 15.894 3.895 15 4.994 15h12.012c1.101 0 1.994.898 1.994 1.998v2.004A1.997 1.997 0 0 1 17.006 21H4.994A2 2 0 0 1 3 19.002z">
+                                                </path>
+                                                <path d="M5 15h12v-2H5zm-2-4h16v6H3z"></path>
+                                                <path
+                                                    d="M7 11.002C7 11 19 11 19 11V8.998C19 9 7 9 7 9zM5 8.998C5 7.894 5.895 7 6.994 7h12.012C20.107 7 21 7.898 21 8.998v2.004A1.997 1.997 0 0 1 19.006 13H6.994A2 2 0 0 1 5 11.002z">
+                                                </path>
+                                                <path
+                                                    d="M5 5v2h12V5zm-2-.002C3 3.894 3.895 3 4.994 3h12.012C18.107 3 19 3.898 19 4.998V9H3z">
+                                                </path>
                                             </g>
                                         </svg>
                                     </span>
-                                    List
+                                    Backlog
                                 </a>
                             </li>
+
+
                             {{-- <li
                                 class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200">
                                 <a class="flex items-center w-full" href="forms.html">
@@ -271,8 +247,23 @@
                                 </a>
                             </li> --}}
                         </ul>
+
                     </template>
+
                 </li>
+
+                <li class="relative px-6 py-3">
+                    <a class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
+                        href="pages/project-settings.html">
+                        <svg class="w-5 h-5" aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
+                            <path fill="currentColor" fill-rule="evenodd"
+                                d="M11.701 16.7a5.002 5.002 0 1 1 0-10.003 5.002 5.002 0 0 1 0 10.004m8.368-3.117a1.995 1.995 0 0 1-1.346-1.885c0-.876.563-1.613 1.345-1.885a.48.48 0 0 0 .315-.574 9 9 0 0 0-.836-1.993.48.48 0 0 0-.598-.195 2.04 2.04 0 0 1-1.29.08 1.99 1.99 0 0 1-1.404-1.395 2.04 2.04 0 0 1 .076-1.297.48.48 0 0 0-.196-.597 9 9 0 0 0-1.975-.826.48.48 0 0 0-.574.314 1.995 1.995 0 0 1-1.885 1.346 1.99 1.99 0 0 1-1.884-1.345.48.48 0 0 0-.575-.315c-.708.2-1.379.485-2.004.842a.47.47 0 0 0-.198.582A2.002 2.002 0 0 1 4.445 7.06a.48.48 0 0 0-.595.196 9 9 0 0 0-.833 1.994.48.48 0 0 0 .308.572 1.995 1.995 0 0 1 1.323 1.877c0 .867-.552 1.599-1.324 1.877a.48.48 0 0 0-.308.57 9 9 0 0 0 .723 1.79.477.477 0 0 0 .624.194c.595-.273 1.343-.264 2.104.238.117.077.225.185.302.3.527.8.512 1.58.198 2.188a.473.473 0 0 0 .168.628 9 9 0 0 0 2.11.897.474.474 0 0 0 .57-.313 1.995 1.995 0 0 1 1.886-1.353c.878 0 1.618.567 1.887 1.353a.475.475 0 0 0 .57.313 9 9 0 0 0 2.084-.883.473.473 0 0 0 .167-.631c-.318-.608-.337-1.393.191-2.195.077-.116.185-.225.302-.302.772-.511 1.527-.513 2.125-.23a.477.477 0 0 0 .628-.19 9 9 0 0 0 .728-1.793.48.48 0 0 0-.314-.573">
+                            </path>
+                        </svg>
+                        <span class="ml-4">Project Settings</span>
+                    </a>
+                </li>
+
 
 
 
@@ -288,20 +279,20 @@
         const modal = document.getElementById('create-project-modal');
         const closeModalBtn = document.getElementById('close-modal');
         const cancelBtn = document.getElementById('cancel-btn');
-        
+
         // Function to open the modal
         createProjectBtn.addEventListener('click', () => {
             modal.classList.remove('hidden');
         });
-        
+
         // Function to close the modal
         const closeModal = () => {
             modal.classList.add('hidden');
         };
-        
+
         closeModalBtn.addEventListener('click', closeModal);
         cancelBtn.addEventListener('click', closeModal);
-        
+
         // Close the modal if the user clicks outside of it
         window.addEventListener('click', (event) => {
             if (event.target === modal) {
@@ -309,6 +300,6 @@
             }
         });
     });
-    </script>
-    
+</script>
+
 </html>

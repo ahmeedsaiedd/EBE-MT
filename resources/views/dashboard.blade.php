@@ -1,7 +1,7 @@
 <x-app-layout>
     <!DOCTYPE html>
     <html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
-      @include('admin.css-script')
+      @include('admin.css')
       <body>
         <div
           class="flex h-screen bg-gray-50 dark:bg-gray-900"

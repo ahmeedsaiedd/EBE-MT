@@ -1,4 +1,6 @@
 <head>
+    <link rel="icon" type="image/x-icon" href="resources\favicon.png">
+
     <style>
         
         .dropdown-menu {

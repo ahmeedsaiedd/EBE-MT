@@ -44,6 +44,8 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
 
     Route::get('/', [DashboardController::class, 'index']);
     Route::get('admin/projects', [ProjectsController::class, 'viewAll'])->name('admin.projects');
+    Route::get('/projects', [AdminController::class, 'projects'])->name('admin.projects');
+
 
 
 
