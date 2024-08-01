@@ -13,6 +13,7 @@ class Issue extends Model
     protected $fillable = [
         'project_id',
         'status_id',
+        'assignee_id',
         'name',
         'summary',
         'description',

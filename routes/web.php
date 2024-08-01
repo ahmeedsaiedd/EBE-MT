@@ -24,8 +24,8 @@ Route::get('/', function () {
 });
 
 Route::middleware(['auth:sanctum', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
+    Route::get('/', function () {
+        return view('/');
     })->name('dashboard');
 
     Route::get('redirect', [HomeController::class, 'redirect']);
@@ -36,7 +36,9 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::get('view_createproject', [AdminController::class, 'view_createproject']);
 
     Route::post('/UserStory', [AdminController::class, 'UserStory']);
-    Route::get('/admin/userstory', [AdminController::class, 'userstory'])->name('admin.userstory');
+    // Route::get('/admin/userstory', [AdminController::class, 'userstory'])->name('admin.userstory');
+    Route::get('/userstory', [AdminController::class, 'Issue'])->name('issue');
+
 
 
     Route::get('/admin/story/dd', [AdminController::class, 'userstory'])->name('admin.story');
@@ -64,7 +66,7 @@ Route::middleware(['auth:sanctum', 'verified'])->group(function () {
     Route::put('issues/{id}', [IssueController::class, 'update']);
     Route::delete('issues/{id}', [IssueController::class, 'destroy']);
 
-    Route::get('/admin/userstory', [AdminController::class, 'userstory'])->name('admin.userstory');
+    Route::get('issue', [AdminController::class, 'issue'])->name('admin.userstory');
 
     Route::get('issues', [IssueController::class, 'index']);
 

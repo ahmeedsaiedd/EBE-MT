@@ -16,6 +16,7 @@ class IssueService
         $issue = Issue::create($request->only(
             'project_id',
             'status_id',
+            'assignee_id',
             'summary',
             'description'
         ));

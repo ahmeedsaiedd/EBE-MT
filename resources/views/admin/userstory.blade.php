@@ -47,6 +47,11 @@
         body.loader-active {
             overflow: hidden;
         }
+
+        /* Hide overflow on body when loader is visible */
+        body.loader-active {
+            overflow: hidden;
+        }
         .popover {
     display: none; /* Hide by default */
     position: absolute;
@@ -504,6 +509,50 @@ document.addEventListener('click', function (event) {
             // Build breadcrumbs on page load
             buildBreadcrumbs();
 });
+document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('createButton').addEventListener('click', function(event) {
+                event.preventDefault(); // Prevent default form submission or link action
+
+                // Show the loading indicator
+                document.getElementById('loading').classList.remove('hidden');
+
+                // Delay the redirection to allow the loading indicator to be visible
+                setTimeout(function() {
+                    window.location.href = "{{ route('issue') }}";
+                }, 500); // Adjust the delay as needed
+            });
+        });
+        document.getElementById('issueForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            // Show the loading indicator
+            document.getElementById('loading').classList.remove('hidden');
+
+            // Create a FormData object to handle file uploads
+            var formData = new FormData(this);
+
+            // Send the form data using fetch API
+            fetch(this.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    }
+                }).then(response => response.json())
+                .then(data => {
+                    // Hide the loading indicator
+                    document.getElementById('loading').classList.add('hidden');
+
+                    // Redirect to the desired route
+                    window.location.href = '{{ route('admin.userstory') }}';
+                }).catch(error => {
+                    // Handle errors
+                    console.error('Error:', error);
+                    // Hide the loading indicator
+                    document.getElementById('loading').classList.add('hidden');
+                });
 
     </script>
 </body>

@@ -67,7 +67,7 @@ class AdminController extends Controller
 
     public function userstory(Request $request)
     {
-        dd("sdfsdfsd");
+        // dd("sdfsdfsd");
     }
 
     public function projects()
